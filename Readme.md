@@ -1,7 +1,7 @@
 # Личный проект «Угадай мелодию» [![Build status][travis-image]][travis-url]
 
 * Студент: [Vladimir Rurik](https://up.htmlacademy.ru/ecmascript/6/user/664207).
-* Наставник: `Неизвестно`.
+* Наставник: `Денис Корнейчук`.
 
 ---
 
