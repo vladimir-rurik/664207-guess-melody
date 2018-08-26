@@ -1,5 +1,5 @@
 // Максимальное число попыток
-const MAX_NUM_OF_ATTEMPTS = 3;
+export const MAX_NUM_OF_ATTEMPTS = 3;
 // Количество вопросов
 const NUM_OF_QUESTIONS = 10;
 // Максимальное время на быстрый ответ
