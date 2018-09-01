@@ -1,5 +1,7 @@
 import {MAX_NUM_OF_ATTEMPTS} from './scoring';
 
+export const GAME_OVER = `Game Over`;
+
 /**
  * Изменение кол-ва попыток ( жизней )
  * @param {Object} game - текущая игра
@@ -20,7 +22,7 @@ export const changeAttempts = (game, attempts) => {
   }
 
   if (attempts === 0) {
-    return `Game Over`;
+    return GAME_OVER;
   }
 
   const newGame = Object.assign({}, game, {

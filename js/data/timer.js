@@ -5,8 +5,8 @@
  */
 export default class Timer {
   constructor(timeInSeconds, onTick, onEnd) {
-    this.startTime = timeInSeconds;
-    this.time = this.startTime;
+    this._startTime = timeInSeconds;
+    this.time = this._startTime;
     if (onEnd && typeof onEnd === `function`) {
       this.onTick = onTick;
     }
@@ -17,7 +17,7 @@ export default class Timer {
 
   start() {
     clearInterval(this.interval);
-    this.time = this.startTime;
+    this.time = this._startTime;
     this.interval = setInterval(() => this.tick(), 1000);
   }
 
@@ -30,10 +30,10 @@ export default class Timer {
   }
 
   tick() {
-    this.time--;
     if (this.onTick) {
       this.onTick(this.time);
     }
+    this.time--;
     return this.time >= 0 ? this.time : this.stop();
   }
 }

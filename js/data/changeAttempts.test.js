@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 import {INITIAL_GAME} from './changeLevel';
-import {changeAttempts} from './changeAttempts';
+import {GAME_OVER, changeAttempts} from './changeAttempts';
 
 describe(`Check attempt changer`, () => {
 
@@ -23,7 +23,7 @@ describe(`Check attempt changer`, () => {
   });
 
   it(`Game Over`, () => {
-    assert.equal(changeAttempts(INITIAL_GAME, 0), `Game Over`);
+    assert.equal(changeAttempts(INITIAL_GAME, 0), GAME_OVER);
   });
 
 });

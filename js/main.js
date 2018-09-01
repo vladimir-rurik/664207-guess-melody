@@ -1,4 +1,5 @@
-import welcome from './screens/welcome';
-import renderScreen from './utils/renderScreen';
+import {showScreen} from './utils';
+import welcome from './screens/screen-welcome';
 
-renderScreen(welcome);
+// Покажем при первом запуске приветственный экран
+showScreen(welcome);

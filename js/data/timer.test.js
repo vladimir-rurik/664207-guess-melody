@@ -9,8 +9,10 @@ describe(`Creating timer`, () => {
   it(`should return right time on tick call`, () => {
     const timer = new Timer(300);
     assert.equal(timer.tick(), 299);
-    assert.equal(timer.tick(), 298);
-    assert.equal(new Timer(1).tick(), 0);
+    timer.time = 30;
+    assert.equal(timer.tick(), 29);
+    timer.time = 1;
+    assert.equal(timer.tick(), 0);
   });
   it(`should return null on end of time`, () => {
     assert.equal(new Timer(0).tick(), null);
