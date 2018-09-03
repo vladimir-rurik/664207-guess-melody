@@ -8,6 +8,8 @@ import genreAnswer from '../components/genre-answer';
 import levelState from '../components/level-state';
 import player from '../components/player';
 import {header} from './header';
+import welcome from './screen-welcome';
+import {showScreen} from '../utils';
 
 /**
  * Шаблон экрана уровня игры с текущим вопросом и состоянием игры
@@ -21,6 +23,7 @@ export default (question) => {
   let title = `<h2 class="game__title">Кто исполняет эту песню?</h2>`;
   let formClass = `game__artist`;
   let btn = ``;
+  let nowPlaying = null;
 
   if (question.type === `genre`) {
     title = `<h2 class="game__title" align="center">Выберите все треки<br> в жанре ${genres[question.answer]}</h2>`;
@@ -50,11 +53,29 @@ export default (question) => {
   const form = element.querySelector(`form`);
   const sendBtn = form.querySelector(`.game__submit`);
 
+  // back to main screen option
+  const welcomeBackBtn = element.querySelector(`.game__back`);
+  welcomeBackBtn.addEventListener(`click`, () => showScreen(welcome));
+
   const answersList = document.createDocumentFragment();
-  question.variants.forEach((id) => {
+  question.options.forEach((id) => {
     answersList.appendChild(question.type === `artist` ? artistAnswer(id) : genreAnswer(id));
   });
   form.appendChild(answersList);
+
+  const togglePlayers = (evt) => {
+    if (nowPlaying && nowPlaying !== evt.target) {
+      nowPlaying.pause();
+      nowPlaying.currentTime = 0;
+
+      const btnPlaying = nowPlaying.nextSibling.parentElement.parentElement.querySelector(`.track__button`);
+      if (btnPlaying.classList.contains(`track__button--pause`)) {
+        btnPlaying.classList.remove(`track__button--pause`);
+        btnPlaying.classList.add(`track__button--play`);
+      }
+    }
+    nowPlaying = evt.target;
+  };
 
   const inputs = Array.from(form[INPUT_NAME]);
 
@@ -72,9 +93,9 @@ export default (question) => {
 
   } else {
     // Подсказка ;)
-    const rightAnswers = Array.from(question.variants)
+    const rightAnswers = Array.from(question.options)
       .filter((i) => melodies[i].genre === question.answer)
-      .map((i) => Array.from(question.variants).indexOf(i) + 1).join(`, `);
+      .map((i) => Array.from(question.options).indexOf(i) + 1).join(`, `);
 
     console.log(`Правильные ответы: ${rightAnswers}`);
 
@@ -85,6 +106,8 @@ export default (question) => {
       // Кнопка отправки отключена, пока не выбран хоть один ответ
       sendBtn.disabled = !inputs.some((answer) => answer.checked);
     }));
+
+    form.addEventListener(`playing`, togglePlayers, true);
 
     form.addEventListener(`submit`, (evt) => {
       evt.preventDefault();

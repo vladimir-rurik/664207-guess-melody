@@ -14,7 +14,7 @@ export const processUserAnswer = (question, answer) => {
   if (question.type === `artist`) {
     verdict = answer === question.answer;
   } else {
-    const rightAnswers = Array.from(question.variants).filter((i) => melodies[i].genre === question.answer);
+    const rightAnswers = Array.from(question.options).filter((i) => melodies[i].genre === question.answer);
     verdict = rightAnswers.every((a, i) => a === answer[i]);
   }
   // Временно поставим рандомное время для теста

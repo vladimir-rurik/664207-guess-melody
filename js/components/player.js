@@ -30,18 +30,20 @@ export default (melody, attrs) => {
       audio.play();
     } else {
       audio.pause();
-      audio.currentTime = 0; // Сброс плеера на начало (временно здесь, пока не придумаю сброс при переключении экранов)
     }
-    playerBtn.classList.toggle(`track__button--play`);
-    playerBtn.classList.toggle(`track__button--pause`);
+    const btn = evt.target;
+    if (btn.classList.contains(`track__button--pause`)) {
+      btn.classList.remove(`track__button--pause`);
+      btn.classList.add(`track__button--play`);
+    }
   };
 
   /**
    * Меняет внешний вид кнопки на паузу, если музыка играет
    */
   const togglePlayerBtnIfPlaying = () => {
-    playerBtn.classList.remove(`track__button--play`);
-    playerBtn.classList.add(`track__button--pause`);
+    playerBtn.classList.toggle(`track__button--play`);
+    playerBtn.classList.toggle(`track__button--pause`);
   };
 
   audio.addEventListener(`playing`, togglePlayerBtnIfPlaying);

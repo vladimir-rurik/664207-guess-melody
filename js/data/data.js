@@ -93,32 +93,32 @@ export const melodies = [
 export const questions = [
   {
     type: `artist`,
-    variants: new Set([3, 4, 5]),
+    options: new Set([3, 4, 5]),
     answer: 3
   },
   {
     type: `genre`,
-    variants: new Set([1, 2, 3, 4]),
+    options: new Set([1, 2, 3, 4]),
     answer: `Jazz`
   },
   {
     type: `artist`,
-    variants: new Set([4, 5, 3]),
+    options: new Set([4, 5, 3]),
     answer: 4
   },
   {
     type: `genre`,
-    variants: new Set([4, 5, 1, 3]),
+    options: new Set([4, 5, 1, 3]),
     answer: `R&B`
   },
   {
     type: `artist`,
-    variants: new Set([3, 5, 4]),
+    options: new Set([3, 5, 4]),
     answer: 5
   },
   {
     type: `genre`,
-    variants: new Set([3, 4, 5, 1]),
+    options: new Set([3, 4, 5, 1]),
     answer: `Electronic`
   }
 ];
