@@ -3,16 +3,18 @@ import {createElementFromString} from '../utils';
 /**
  * Шаблон состояния игры в виде таймера и оставшихся попыток
  * @param {Object} state - Текущее состояние игры
+ * @param {Object} svg - параметры зарисовки круга
  * @return {Node}
  */
-export default (state) => {
+export default (state, svg) => {
   const addFirstZero = (num) => (`0${Math.floor(num)}`).slice(-2);
   const mistakes = new Array(state.user.restAttempts).fill(`<div class="wrong"></div>`).join(``);
 
   const levelState = `
     <svg xmlns="http://www.w3.org/2000/svg" class="timer" viewBox="0 0 780 780">
-      <circle class="timer__line" cx="390" cy="390" r="370"
-              style="filter: url(.#blur); transform: rotate(-90deg) scaleY(-1); transform-origin: center"/>
+      <circle cx="390" cy="390" r="370" class="timer-line"
+        stroke-dasharray="${svg.stroke}" stroke-dashoffset="${svg.offset}" style="filter: url(.#blur);
+        transform: rotate(-90deg) scaleY(-1); transform-origin: center"></circle>
     </svg>
 
     <div class="timer__value" xmlns="http://www.w3.org/1999/xhtml">
