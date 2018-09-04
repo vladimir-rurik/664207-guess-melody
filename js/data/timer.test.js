@@ -1,31 +1,29 @@
-/* eslint-disable no-console */
 import {assert} from 'chai';
 import Timer from './timer';
 
-describe(`Creating timer`, () => {
-  it(`should return object with timer`, () => {
-    assert.isObject(new Timer());
-  });
-  it(`should return right time on tick call`, () => {
-    const timer = new Timer(300);
-    assert.equal(timer.tick(), 299);
-    assert.equal(timer.tick(), 298);
-    assert.equal(new Timer(1).tick(), 0);
-  });
-  it(`should return null on end of time`, () => {
-    assert.equal(new Timer(0).tick(), null);
-  });
-  it(`should call function on end of time`, () => {
-    let wasCalled = false;
+describe(`Таймер`, () => {
+  it(`Должен подсчитать количество оставшегося времени после тика`, () => {
+    const timer = new Timer(20);
+    const expectedFirst = 19;
+    const expectedSecond = 18;
+    const expectedThird = 17;
 
-    new Timer(1, null, () => {
-      wasCalled = true;
-    }).tick();
-    assert.isFalse(wasCalled);
+    assert.equal(timer.tick(), expectedFirst);
+    assert.equal(timer.tick(), expectedSecond);
+    assert.equal(timer.tick(), expectedThird);
+  });
 
-    new Timer(0, null, () => {
-      wasCalled = true;
-    }).tick();
-    assert.isTrue(wasCalled);
+  it(`Должен вернуть null, если время вышло`, () => {
+    const timer = new Timer(1);
+    const expected = null;
+
+    assert.equal(timer.tick(), expected);
+  });
+
+  it(`Должен вернуть null, если передано отрицательное время`, () => {
+    const timer = new Timer(-10);
+    const expected = null;
+
+    assert.equal(timer.tick(), expected);
   });
 });

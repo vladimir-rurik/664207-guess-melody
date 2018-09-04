@@ -11,23 +11,35 @@ describe(`Printing results`, () => {
   it(`should return right message on success`, () => {
     const userResult = {
       points: 9,
-      restNotes: 2,
-      restTime: 50
+      restAttempts: 2,
+      restTime: 95
     };
-    assert.equal(printResults([1, 2, 3, 4, 5, 6, 7, 8, 10], userResult), `Вы заняли 2-ое место из 10. Это лучше чем у 80% игроков.`);
+    assert.deepEqual(printResults([1, 2, 3, 4, 5, 6, 7, 8, 10], userResult), {
+      result: `За&nbsp;3&nbsp;минуты и 25&nbsp;секунд
+      <br>вы&nbsp;набрали 9&nbsp;баллов (0&nbsp;быстрых),
+      <br>совершив 1&nbsp;ошибку`,
+      comparison: `Вы заняли 2-ое место из 10. Это лучше чем у 80% игроков.`
+
+    });
   });
 
   it(`should return right message on lose`, () => {
-    assert.equal(printResults([4, 5, 8, 20], {
+    assert.deepEqual(printResults([4, 5, 8, 20], {
       points: 10,
-      restNotes: 2,
+      restAttempts: 2,
       restTime: 0
-    }), `Время вышло! Вы не успели отгадать все мелодии.`);
+    }), {
+      result: `Время вышло! Вы не успели отгадать все мелодии.`,
+      comparison: ``
+    });
 
-    assert.equal(printResults([4, 5, 8, 20], {
+    assert.deepEqual(printResults([4, 5, 8, 20], {
       points: 10,
-      restNotes: 0,
+      restAttempts: 0,
       restTime: 120
-    }), `У вас закончились все попытки. Ничего, повезёт в следующий раз!`);
+    }), {
+      result: `У вас закончились все попытки.<br> Ничего, повезёт в следующий раз!`,
+      comparison: ``
+    });
   });
 });
