@@ -10,6 +10,7 @@ import player from '../components/player';
 import {header} from './header';
 import welcome from './screen-welcome';
 import {showScreen} from '../utils';
+import {getRadius} from '../data/get-radius';
 
 /**
  * Шаблон экрана уровня игры с текущим вопросом и состоянием игры
@@ -20,6 +21,9 @@ import {showScreen} from '../utils';
  * @return {Node}
  */
 export default (question) => {
+  const timerRelation = 20 / 300; // TODO make a timer's time variable instead of hardcoded 20
+  const svgOptions = getRadius(timerRelation, 370);
+
   let title = `<h2 class="game__title">Кто исполняет эту песню?</h2>`;
   let formClass = `game__artist`;
   let btn = ``;
@@ -49,7 +53,7 @@ export default (question) => {
   `;
 
   const element = createElementFromString(level);
-  element.insertBefore(levelState(gameState), element.firstChild);
+  element.insertBefore(levelState(gameState, svgOptions), element.firstChild);
   const form = element.querySelector(`form`);
   const sendBtn = form.querySelector(`.game__submit`);
 
