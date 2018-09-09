@@ -1,16 +1,12 @@
-export const gameState = {
+export const INITIAL_STATE = Object.freeze({
   question: 0,
   answers: [],
   attempts: 3,
   time: 300,
-  user: {
-    points: 0,
-    restAttempts: 3,
-    restTime: 300
-  }
-};
-
-export const INPUT_NAME = `answer`;
+  points: 0,
+  restAttempts: 3,
+  restTime: 300
+});
 
 export const statistics = [1, 4, 5, 8];
 
@@ -22,23 +18,13 @@ export const numerals = {
   seconds: [`секунду`, `секунды`, `секунд`]
 };
 
-export const genres = {
-  'Rock': `инди-рок`,
-  'Jazz': `джаз`,
-  'Country': `кантри`,
-  'Pop': `поп-музыка`,
-  'Folk': `фолк`,
-  'R&B': `R&B`,
-  'Electronic': `электронная музыка`
-};
-
 export const result = {
   WIN: {
-    title: [`Вы - настоящий меломан!`, `Мне бы вашу удачу!`],
+    titles: [`Вы - настоящий меломан!`, `Мне бы вашу удачу!`],
     button: `Сыграть ещё раз`
   },
   LOSE: {
-    title: [`Увы и ах!`, `Какая жалость!`, `Это фиаско!`],
+    titles: [`Увы и ах!`, `Какая жалость!`, `Это фиаско!`],
     button: `Попробовать ещё раз`
   }
 };

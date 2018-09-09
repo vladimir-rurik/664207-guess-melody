@@ -1,5 +1,11 @@
+import WelcomeScreen from './screens/screen-welcome';
 import {showScreen} from './utils';
-import welcome from './screens/screen-welcome';
+import {startNewGame} from "./game-process";
 
-// Покажем при первом запуске приветственный экран
-showScreen(welcome);
+const welcome = new WelcomeScreen();
+
+showScreen(welcome.element);
+
+welcome.onStartClick = () => {
+  startNewGame();
+};

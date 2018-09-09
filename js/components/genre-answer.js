@@ -1,23 +1,32 @@
-import {createElementFromString} from '../utils';
-import {INPUT_NAME, melodies} from "../data/data";
-import player from './player';
+
+import AbstractView from "../abstract-view";
+import Player from './player';
 
 /**
  * Шаблон вариантов мелодий по жанру
- * @param {number} id - Номер мелодии из списка вопросов
- * @return {Node}
  */
-export default (id) => {
-  const genreAnswer = `
-  <div class="game__answer">
-    <input class="game__input visually-hidden" type="checkbox" name="${INPUT_NAME}" value="${id}" id="answer-${id}">
-    <label class="game__check" for="answer-${id}">Отметить</label>
-  </div>`;
+export default class GenreAnswer extends AbstractView {
+  /** @constructor
+   * @param {Array} melodies - Массив мелодий из данных
+   * @param {number} id - Номер мелодии из списка вопросов
+   * @param {string} inputName - Имя элемента ввода
+   */
+  constructor(melodies, id, inputName) {
+    super();
+    this.id = id;
+    this.inputName = inputName;
+    this.player = new Player(melodies[id]).element;
+  }
 
-  const genreElement = createElementFromString(genreAnswer);
-  const element = player(melodies[id]);
+  get template() {
+    return `
+    <div class="game__answer">
+      <input class="game__input visually-hidden" type="checkbox" name="${this.inputName}" value="${this.id}" id="answer-${this.id}">
+      <label class="game__check" for="answer-${this.id}">Отметить</label>
+    </div>`;
+  }
 
-  element.insertBefore(genreElement, element.firstChild);
-
-  return element;
-};
+  bind() {
+    this.element.insertAdjacentElement(`afterbegin`, this.player);
+  }
+}
