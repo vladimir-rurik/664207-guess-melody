@@ -3,8 +3,7 @@ import PlayerView from './player';
 import ArtistAnswerView from './artist-answer';
 import GenreAnswerView from './genre-answer';
 import {header} from '../screens/header';
-// import {showScreen} from './utils';
-// import WelcomeScreen from '../screens/screen-welcome';
+import Application from "../application";
 
 /** @enum Genres - Ассоциация жанра с его описанием */
 const Genres = {
@@ -88,10 +87,6 @@ export default class LevelScreen extends AbstractView {
   bind() {
     const form = this.element.querySelector(`form`);
 
-    // // TODO back to main screen option
-    // const welcomeBackBtn = this.element.querySelector(`.game__back`);
-    // welcomeBackBtn.addEventListener(`click`, () => showScreen(WelcomeScreen));
-
     const options = Array.from(this.question.options);
     const answerList = document.createDocumentFragment();
     for (const id of options) {
@@ -101,6 +96,10 @@ export default class LevelScreen extends AbstractView {
     }
 
     form.insertBefore(answerList, form.firstChild);
+
+    // back to main screen option
+    const welcomeBackBtn = this.element.querySelector(`.game__back`);
+    welcomeBackBtn.addEventListener(`click`, () => Application.showWelcome());
 
     const inputs = Array.from(form[INPUT_NAME]);
 
