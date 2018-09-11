@@ -14,7 +14,7 @@ const addFirstZero = (num) => (`0${Math.floor(num)}`).slice(-2);
  * @param {Object} svg - параметры зарисовки круга
  * @return {Node}
  */
-export default class LevelState extends AbstractView {
+export default class StateView extends AbstractView {
   constructor(state, svg) {
     super();
     this.state = state;

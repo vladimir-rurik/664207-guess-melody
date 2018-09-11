@@ -4,7 +4,7 @@ import AbstractView from "../abstract-view";
 /**
  * Шаблон музыкального плеера
  */
-export default class Player extends AbstractView {
+export default class PlayerView extends AbstractView {
   /** @constructor
    * @param {Object} melody - мелодия для воспроизведения
    * @param {string} [attrs] - дополнительные атрибуты аудио, например autoplay
@@ -51,12 +51,18 @@ export default class Player extends AbstractView {
     /**
      * Меняет внешний вид кнопки на паузу, если музыка играет
      */
-    const togglePlayerBtnIfPlaying = () => {
+    const togglePlayerBtnOnPlaying = () => {
       playerBtn.classList.toggle(`track__button--play`);
       playerBtn.classList.toggle(`track__button--pause`);
     };
 
-    audio.addEventListener(`playing`, togglePlayerBtnIfPlaying);
+    const togglePlayerBtnOnEnded = () => {
+      playerBtn.classList.remove(`track__button--pause`);
+      playerBtn.classList.add(`track__button--play`);
+    };
+
+    audio.addEventListener(`playing`, togglePlayerBtnOnPlaying);
+    audio.addEventListener(`ended`, togglePlayerBtnOnEnded);
     playerBtn.addEventListener(`click`, playerBtnHolder);
   }
 }

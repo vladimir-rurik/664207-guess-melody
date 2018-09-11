@@ -1,11 +1,3 @@
-import WelcomeScreen from './screens/screen-welcome';
-import {showScreen} from './utils';
-import {startNewGame} from "./game-process";
+import Application from "./application";
 
-const welcome = new WelcomeScreen();
-
-showScreen(welcome.element);
-
-welcome.onStartClick = () => {
-  startNewGame();
-};
+Application.showWelcome();

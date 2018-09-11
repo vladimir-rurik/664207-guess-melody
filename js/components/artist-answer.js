@@ -4,7 +4,7 @@ import AbstractView from "../abstract-view";
 /**
  * Шаблон вариантов ответов по артистам
  */
-export default class ArtistAnswer extends AbstractView {
+export default class ArtistAnswerView extends AbstractView {
   /** @constructor
    * @param {Array} melodies - Массив мелодий из данных
    * @param {number} id - Номер мелодии из списка вопросов
