@@ -1,29 +1,29 @@
 import {assert} from 'chai';
 import Timer from './timer';
 
-describe(`Таймер`, () => {
-  it(`Должен подсчитать количество оставшегося времени после тика`, () => {
-    const timer = new Timer(20);
-    const expectedFirst = 19;
-    const expectedSecond = 18;
-    const expectedThird = 17;
-
-    assert.equal(timer.tick(), expectedFirst);
-    assert.equal(timer.tick(), expectedSecond);
-    assert.equal(timer.tick(), expectedThird);
+describe(`Creating timer`, () => {
+  it(`should return object with timer`, () => {
+    assert.isObject(new Timer());
   });
-
-  it(`Должен вернуть null, если время вышло`, () => {
-    const timer = new Timer(1);
-    const expected = null;
-
-    assert.equal(timer.tick(), expected);
+  it(`should return right time on tick call`, () => {
+    const timer = new Timer(300);
+    assert.equal(timer.tick(), 299);
+    timer.time = 30;
+    assert.equal(timer.tick(), 29);
+    timer.time = 2;
+    assert.equal(timer.tick(), 1);
   });
+  it(`should call function on end of time`, () => {
+    let wasCalled = false;
 
-  it(`Должен вернуть null, если передано отрицательное время`, () => {
-    const timer = new Timer(-10);
-    const expected = null;
+    new Timer(2, null, () => {
+      wasCalled = true;
+    }).tick();
+    assert.isFalse(wasCalled);
 
-    assert.equal(timer.tick(), expected);
+    new Timer(1, null, () => {
+      wasCalled = true;
+    }).tick();
+    assert.isTrue(wasCalled);
   });
 });

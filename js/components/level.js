@@ -1,8 +1,8 @@
 import AbstractView from "../abstract-view";
-import Player from '../components/player';
-import ArtistAnswer from '../components/artist-answer';
-import GenreAnswer from '../components/genre-answer';
-import {header} from './header';
+import PlayerView from './player';
+import ArtistAnswerView from './artist-answer';
+import GenreAnswerView from './genre-answer';
+import {header} from '../screens/header';
 // import {showScreen} from './utils';
 // import WelcomeScreen from '../screens/screen-welcome';
 
@@ -29,13 +29,12 @@ export default class LevelScreen extends AbstractView {
   /** @constructor
    * @param {Object} melodies - Список мелодий с сервера
    * @param {Object} question - Текущий вопрос
-   * @param {Object} levelState - Текущee состояние игры
    */
-  constructor(melodies, question, levelState) {
+  constructor(melodies, question) {
     super();
     this.melodies = melodies;
     this.question = question;
-    this.levelState = levelState;
+    this.nowPlaying = null;
   }
 
   get template() {
@@ -56,7 +55,7 @@ export default class LevelScreen extends AbstractView {
         <!--levelState-->
         <div class="main__wrap">
           ${title}
-          <!--Player-->
+          <!--PlayerView-->
           <form class="${formClass}">
             <!--Answers-->
             ${btn}
@@ -69,39 +68,36 @@ export default class LevelScreen extends AbstractView {
 
   onAnswer() {}
 
-  bind() {
-    this.element.insertAdjacentElement(`afterbegin`, this.levelState.element);
-    const form = this.element.querySelector(`form`);
+  onLevelLoaded() {}
 
+  togglePlayers(evt) {
+    if (this.nowPlaying && this.nowPlaying !== evt.target) {
+      this.nowPlaying.pause();
+      this.nowPlaying.currentTime = 0;
+
+      const btnPlaying = this.nowPlaying.nextSibling.parentElement.parentElement.querySelector(`.track__button`);
+      if (btnPlaying.classList.contains(`track__button--pause`)) {
+        btnPlaying.classList.remove(`track__button--pause`);
+        btnPlaying.classList.add(`track__button--play`);
+      }
+    }
+    this.nowPlaying = evt.target;
+  }
+
+
+  bind() {
+    const form = this.element.querySelector(`form`);
 
     // // TODO back to main screen option
     // const welcomeBackBtn = this.element.querySelector(`.game__back`);
     // welcomeBackBtn.addEventListener(`click`, () => showScreen(WelcomeScreen));
 
-    // -- логика переключения играющих мелодий, включается новая, отключается предыдущая
-    let nowPlaying = null;
-    const togglePlayers = (evt) => {
-      if (nowPlaying && nowPlaying !== evt.target) {
-        nowPlaying.pause();
-        nowPlaying.currentTime = 0;
-
-        const btnPlaying = nowPlaying.nextSibling.parentElement.parentElement.querySelector(`.track__button`);
-        if (btnPlaying.classList.contains(`track__button--pause`)) {
-          btnPlaying.classList.remove(`track__button--pause`);
-          btnPlaying.classList.add(`track__button--play`);
-        }
-      }
-      nowPlaying = evt.target;
-    };
-    form.addEventListener(`playing`, togglePlayers, true);
-    // ---
-
     const options = Array.from(this.question.options);
     const answerList = document.createDocumentFragment();
     for (const id of options) {
       answerList.appendChild(this.question.type === `artist`
-        ? new ArtistAnswer(this.melodies, id, INPUT_NAME).element
-        : new GenreAnswer(this.melodies, id, INPUT_NAME).element);
+        ? new ArtistAnswerView(this.melodies, id, INPUT_NAME).element
+        : new GenreAnswerView(this.melodies, id, INPUT_NAME).element);
     }
 
     form.insertBefore(answerList, form.firstChild);
@@ -109,9 +105,8 @@ export default class LevelScreen extends AbstractView {
     const inputs = Array.from(form[INPUT_NAME]);
 
     if (this.question.type === `artist`) {
-      this.element.querySelector(`.main__wrap`).insertBefore(
-          new Player(this.melodies[this.question.answer], `autoplay`).element, form
-      );
+      const player = new PlayerView(this.melodies[this.question.answer], `autoplay`).element;
+      form.insertBefore(player, form.firstChild);
 
       inputs.forEach((input) => input.addEventListener(`change`, (evt) => {
         evt.preventDefault();
@@ -120,11 +115,17 @@ export default class LevelScreen extends AbstractView {
       }));
 
     } else {
+      const firstPlayer = form.firstChild;
+      firstPlayer.querySelector(`audio`).setAttribute(`autoplay`, ``);
+
       inputs.forEach((input) => input.addEventListener(`change`, (evt) => {
         evt.preventDefault();
         // Кнопка отправки отключена, пока не выбран хоть один ответ
         form.querySelector(`.game__submit`).disabled = !inputs.some((answer) => answer.checked);
       }));
+
+      // логика переключения играющих мелодий, включается новая, отключается предыдущая
+      form.addEventListener(`playing`, this.togglePlayers, true);
 
       form.addEventListener(`submit`, (evt) => {
         evt.preventDefault();
@@ -132,5 +133,7 @@ export default class LevelScreen extends AbstractView {
         this.onAnswer(this.question, answer);
       });
     }
+
+    this.onLevelLoaded();
   }
 }

@@ -1,4 +1,20 @@
-import {INITIAL_STATE, numerals} from "./data";
+const INITIAL_STATE = {
+  time: 300,
+  attempts: 3
+};
+
+export const numerals = {
+  mistakes: [`ошибку`, `ошибки`, `ошибок`],
+  points: [`балл`, `балла`, `баллов`],
+  fastPoints: [`быстрый`, `быстрых`, `быстрых`],
+  minutes: [`минуту`, `минуты`, `минут`],
+  seconds: [`секунду`, `секунды`, `секунд`]
+};
+
+const ResultTypeTitles = {
+  win: [`Вы - настоящий меломан!`, `Мне бы вашу удачу!`],
+  lose: [`Увы и ах!`, `Какая жалость!`, `Это фиаско!`]
+};
 
 /**
  * Получение результов игрока
@@ -19,6 +35,16 @@ export const getResults = (allUserResults, points) => {
 };
 
 /**
+ * Генератор заголовка результа
+ * @param {string} type - Тип результата
+ * @return {string} - Заголовок
+ */
+const getTitleFor = (type) => {
+  const titles = ResultTypeTitles[type];
+  return titles[Math.floor(Math.random() * titles.length)];
+};
+
+/**
  * Склонение числительных на русском языке
  * @param {number} n - Натуральное число
  * @param {Array} titles - Массив форм склонений. Пример: [`число`,`числа`,`чисел`]
@@ -36,16 +62,17 @@ const declOfNum = (n, titles) => {
 
 /**
  * Вывод сообщения со статистикой игрока
- * @param {Object} message - Объект результата игрока
+ * @param {Object} result - Объект результата игрока
  * @return {string} - Сообщение о результате игрока
  */
-const createResultMessage = (message) => {
-  const userTime = INITIAL_STATE.time - message.restTime;
+const createResultMessage = (result) => {
+  const userTime = INITIAL_STATE.time - result.restTime;
   const minutes = declOfNum(Math.floor(userTime / 60), numerals.minutes);
   const seconds = declOfNum(Math.floor(userTime % 60), numerals.seconds);
-  const points = declOfNum(message.points, numerals.points);
-  const fastPoints = declOfNum(INITIAL_STATE.answers.filter((a) => a.time < 30).length, numerals.fastPoints);
-  const mistakes = declOfNum(INITIAL_STATE.attempts - message.restAttempts, numerals.mistakes);
+  const points = declOfNum(result.points, numerals.points);
+  const fastPoints = declOfNum(result.answers
+      .filter((a) => a.success && a.time < 30).length, numerals.fastPoints);
+  const mistakes = declOfNum(INITIAL_STATE.attempts - result.restAttempts, numerals.mistakes);
 
   return `За&nbsp;${minutes} и ${seconds}
       <br>вы&nbsp;набрали ${points} (${fastPoints}),
@@ -64,22 +91,28 @@ const createResultMessage = (message) => {
 export const printResults = (allUserResults, userResult) => {
   if (userResult.restAttempts === 0) {
     return {
+      title: getTitleFor(`lose`),
       message: `У вас закончились все попытки.<br> Ничего, повезёт в следующий раз!`,
-      comparison: ``
+      comparison: ``,
+      button: `Попробовать ещё раз`
     };
   }
 
   if (userResult.restTime === 0) {
     return {
-      message: `Время вышло! Вы не успели отгадать все мелодии.`,
-      comparison: ``
+      title: getTitleFor(`lose`),
+      message: `Время вышло! Вы не успели<br> отгадать все мелодии.`,
+      comparison: ``,
+      button: `Попробовать ещё раз`
     };
   }
 
   const [position, total, percent] = getResults(allUserResults, userResult.points);
 
   return {
+    title: getTitleFor(`win`),
     message: createResultMessage(userResult),
-    comparison: `Вы заняли ${position}-ое место из ${total}. Это лучше чем у ${percent}% игроков.`
+    comparison: `Вы заняли ${position}-ое место из ${total}. Это лучше чем у ${percent}% игроков.`,
+    button: `Сыграть ещё раз`
   };
 };
