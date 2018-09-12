@@ -2,7 +2,6 @@ import StateView from '../components/state';
 import LevelView from '../components/level';
 import Application from '../application';
 import Timer from '../data/timer';
-import {getRadius} from '../data/get-radius';
 
 export default class GameScreen {
   constructor(model) {
@@ -13,10 +12,7 @@ export default class GameScreen {
         this.onTimerEnd.bind(this));
     this._startTime = this.timer.currentTime;
 
-    const timerRelation = 20 / 300; // TODO make a timer's time variable instead of hardcoded 20
-    this.svg = getRadius(timerRelation, 370);
-
-    this.levelState = new StateView(this.model.state, this.svg);
+    this.levelState = new StateView(this.model.state);
     this.levelView = new LevelView(this.model.getCurrentQuestion(), this.model.getProgress());
 
     this.root = document.createElement(`section`);
@@ -72,7 +68,7 @@ export default class GameScreen {
   }
 
   updateStateView() {
-    const stateView = new StateView(this.model.state, this.svg);
+    const stateView = new StateView(this.model.state);
     this.root.replaceChild(stateView.element, this.levelState.element);
     this.levelState = stateView;
   }

@@ -16,10 +16,9 @@ const addFirstZero = (num) => (`0${Math.floor(num)}`).slice(-2);
  * @return {Node}
  */
 export default class StateView extends AbstractView {
-  constructor(state, svg) {
+  constructor(state) {
     super();
     this.state = state;
-    this.svg = svg;
     this._initialTime = INITIAL_STATE.time;
     this.mistakes = INITIAL_STATE.attempts - this.state.restAttempts;
     this.timeFinished = this.state.restTime >= 30 ? `` : `timer__value--finished`;
@@ -29,7 +28,6 @@ export default class StateView extends AbstractView {
     return `
     <svg xmlns="http://www.w3.org/2000/svg" class="timer" viewBox="0 0 780 780">
       <circle cx="390" cy="390" r="370" class="timer__line"
-        stroke-dasharray="${this.svg.stroke}" stroke-dashoffset="${this.svg.offset}"
         style="filter: url(#blur); transform: rotate(-90deg) scaleY(-1); transform-origin: center"></circle>
     </svg>
 
