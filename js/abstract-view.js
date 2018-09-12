@@ -1,4 +1,13 @@
-import {createElementFromString} from "./utils";
+/**
+ * Создание нового DOM-элемента из шаблонной строки
+ * @param {string} stringHTML - строка с HTML содержимым
+ * @return {Node}
+ */
+const createElementFromString = (stringHTML) => {
+  const template = document.createElement(`template`);
+  template.innerHTML = stringHTML.trim();
+  return template.content.firstChild;
+};
 
 /**
  * Абстрактный класс для создания слоя представления

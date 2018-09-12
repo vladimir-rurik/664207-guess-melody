@@ -17,7 +17,7 @@ export default class GameScreen {
     this.svg = getRadius(timerRelation, 370);
 
     this.levelState = new StateView(this.model.state, this.svg);
-    this.levelView = new LevelView(this.model.getCurrentQuestion());
+    this.levelView = new LevelView(this.model.getCurrentQuestion(), this.model.getProgress());
 
     this.root = document.createElement(`section`);
     this.root.classList.add(`main`, `main--level`);
@@ -94,7 +94,7 @@ export default class GameScreen {
 
   showNextQuestion() {
     this.updateStateView();
-    const nextQuestion = new LevelView(this.model.getNextQuestion());
+    const nextQuestion = new LevelView(this.model.getNextQuestion(), this.model.getProgress());
     nextQuestion.onLevelLoaded = this.setStartTimeForAnswer.bind(this);
     nextQuestion.onAnswer = this.processUserAnswer.bind(this);
     this.updateLevelView(nextQuestion);
@@ -102,8 +102,6 @@ export default class GameScreen {
 
   showResultScreen() {
     this.timer.stop();
-    const stats = this.model.getStats();
-    this.model.updateStats();
-    Application.showStats(stats);
+    Application.showStats(this.model.state);
   }
 }

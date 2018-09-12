@@ -17,20 +17,22 @@ const INPUT_NAME = `answer`;
 export default class LevelScreen extends AbstractView {
   /** @constructor
    * @param {Object} question - Текущий вопрос
+   * @param {string} progress - Показатель прогресса
    */
-  constructor(question) {
+  constructor(question, progress) {
     super();
     this.question = question;
+    this.progress = progress;
     this.nowPlaying = null;
   }
 
   get template() {
-    let title = `<h2 class="game__title">${this.question.title}</h2>`;
+    let titleClass = `game__title`;
     let formClass = `game__artist`;
     let btn = ``;
 
     if (this.question.type === `genre`) {
-      title = `<h2 class="game__title" align="center">${this.question.title}</h2>`;
+      titleClass = ``;
       formClass = `game__tracks`;
       btn = `<button class="game__submit button" type="submit" disabled>Ответить</button>`;
     }
@@ -41,7 +43,8 @@ export default class LevelScreen extends AbstractView {
         ${header}
         <!--levelState-->
         <div class="main__wrap">
-          ${title}
+          <div class="progress">${this.progress}</div>
+          <h2 class="title ${titleClass}">${this.question.title}</h2>
           <!--PlayerView-->
           <form class="${formClass}">
             <!--Answers-->
@@ -62,7 +65,7 @@ export default class LevelScreen extends AbstractView {
       this.nowPlaying.pause();
       this.nowPlaying.currentTime = 0;
 
-      const btnPlaying = this.nowPlaying.nextSibling.parentElement.parentElement.querySelector(`.track__button`);
+      const btnPlaying = this.nowPlaying.parentNode.querySelector(`.track__button`);
       if (btnPlaying.classList.contains(`track__button--pause`)) {
         btnPlaying.classList.remove(`track__button--pause`);
         btnPlaying.classList.add(`track__button--play`);

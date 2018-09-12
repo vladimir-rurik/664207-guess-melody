@@ -2,58 +2,17 @@ import WelcomeScreen from './screens/welcome-screen';
 import GameModel from './data/game-model';
 import GameScreen from './screens/game-screen';
 import ResultScreen from './screens/result-screen';
-import LoadingScreen from "./screens/loading-screen";
 import ErrorScreen from "./screens/error-screen";
+import Loader from "./loader";
+import LoadingScreen from "./screens/loading-screen";
 
 /**
  * Рендер экран приложения
  * @param {Node} element - Элемент экрана
  */
-const showScreen = (element) => {
-  const mainScreen = document.querySelector(`.main`);
+export const showScreen = (element) => {
+  const mainScreen = document.querySelector(`.app .main`);
   mainScreen.parentNode.replaceChild(element, mainScreen);
-};
-
-const checkResponseStatus = (response) => {
-  if (response.ok) {
-    return response;
-  } else if (response.status === 404) {
-    throw new Error(`Данные не удалось загрузить,<br> ошибка ${response.status}`);
-  } else {
-    throw new Error(`Произошла ошибка ${response.status} ${response.statusText}`);
-  }
-};
-
-const adaptData = (data) => {
-  return data.map((question) => {
-    let adapted;
-    if (question.type === `artist`) {
-      const options = question.answers.map((it) => {
-        return {
-          artist: it.title,
-          image: it.image
-        };
-      });
-      adapted = {
-        type: question.type,
-        title: question.question,
-        options,
-        melody: question.src,
-        answer: question.answers.findIndex((a) => a.isCorrect)
-      };
-    } else if (question.type === `genre`) {
-      const options = question.answers.map((a, i) => {
-        return Object.assign({}, a, {id: i});
-      });
-      adapted = {
-        type: question.type,
-        title: question.question,
-        options,
-        answer: question.genre
-      };
-    }
-    return adapted;
-  });
 };
 
 let questions = [];
@@ -61,12 +20,7 @@ let questions = [];
 /** Класс для управления экранами игры */
 export default class Application {
   static start() {
-    const loader = new LoadingScreen().element;
-    window.fetch(`https://es.dump.academy/guess-melody/questions`)
-        .then(checkResponseStatus)
-        .then(showScreen(loader))
-        .then((response) => response.json())
-        .then((data) => adaptData(data))
+    Loader.loadData()
         .then(Application.showWelcome)
         .catch(Application.showError);
   }
@@ -83,9 +37,22 @@ export default class Application {
     gameScreen.startGame();
   }
 
-  static showStats(screenType, stats) {
-    const resultScreen = new ResultScreen(screenType, stats);
-    showScreen(resultScreen.element);
+  static showStats(state) {
+    const stats = GameModel.getStats(state);
+    if (stats.isWin) {
+      showScreen(new LoadingScreen().element);
+      const result = {
+        points: stats.points,
+        time: stats.time
+      };
+      Loader.saveStats(result)
+          .then(() => Loader.loadStats())
+          .then((data) => GameModel.getStats(state, data))
+          .then((newstats) => showScreen(new ResultScreen(newstats).element))
+          .catch(Application.showError);
+    } else {
+      showScreen(new ResultScreen(stats).element);
+    }
   }
 
   static showError(message) {
