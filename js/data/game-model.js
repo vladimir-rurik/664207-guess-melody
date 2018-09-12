@@ -1,26 +1,23 @@
-import {INITIAL_STATE, melodies, questions, statistics} from "../data/data";
+/* eslint-disable no-console */
 import {calcScoring} from "./scoring";
 import {printResults} from "./results";
 
+const INITIAL_STATE = Object.freeze({
+  question: 0,
+  answers: [],
+  points: 0,
+  restAttempts: 3,
+  restTime: 300
+});
+
 export default class GameModel {
-  constructor() {
+  constructor(questions) {
     this.restart();
-    this.statistics = statistics;
-    this.melodies = melodies;
     this.questions = questions;
   }
 
   get state() {
     return this._state;
-  }
-
-  getQuestion(state) {
-    return this.questions[state.question];
-  }
-
-  get rightGenreAnswers() {
-    const question = this.getQuestion(this._state);
-    return Array.from(question.options).filter((i) => this.melodies[i].genre === question.answer);
   }
 
   updateStateProp(prop) {
@@ -47,7 +44,11 @@ export default class GameModel {
   }
 
   getCurrentQuestion() {
-    return this.getQuestion(this._state);
+    return this.questions[this._state.question];
+  }
+
+  getProgress() {
+    return `${this._state.question + 1}/${this.questions.length}`;
   }
 
   getNextQuestion() {
@@ -55,20 +56,16 @@ export default class GameModel {
     return this.getCurrentQuestion();
   }
 
-  getStats() {
-    return printResults(this.statistics, this._state);
+  static getStats(state, data) {
+    console.log(data);
+    const stats = data ? data.slice(0, data.length - 1) : [];
+    return printResults(stats, state);
   }
 
   restart() {
     this._answers = [];
     this._state = INITIAL_STATE;
     this.updateStateProp({answers: this._answers});
-  }
-
-  updateStats() {
-    if (this._state.points !== null) {
-      this.statistics.push(this._state.points);
-    }
   }
 
   setRestTime(restTime) {

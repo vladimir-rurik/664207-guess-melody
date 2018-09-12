@@ -2,7 +2,6 @@ import StateView from '../components/state';
 import LevelView from '../components/level';
 import Application from '../application';
 import Timer from '../data/timer';
-import {getRadius} from '../data/get-radius';
 
 export default class GameScreen {
   constructor(model) {
@@ -13,11 +12,8 @@ export default class GameScreen {
         this.onTimerEnd.bind(this));
     this._startTime = this.timer.currentTime;
 
-    const timerRelation = 20 / 300; // TODO make a timer's time variable instead of hardcoded 20
-    this.svg = getRadius(timerRelation, 370);
-
-    this.levelState = new StateView(this.model.state, this.svg);
-    this.levelView = new LevelView(this.model.melodies, this.model.getCurrentQuestion());
+    this.levelState = new StateView(this.model.state);
+    this.levelView = new LevelView(this.model.getCurrentQuestion(), this.model.getProgress());
 
     this.root = document.createElement(`section`);
     this.root.classList.add(`main`, `main--level`);
@@ -55,7 +51,10 @@ export default class GameScreen {
     if (question.type === `artist`) {
       verdict = answer === question.answer;
     } else {
-      verdict = this.model.rightGenreAnswers.every((a, i) => a === answer[i]);
+      const rightAnswers = Array.from(question.options).filter((option) => {
+        return option.genre === question.answer;
+      }).map((rightAnswer) => rightAnswer.id);
+      verdict = rightAnswers.join() === answer.join();
     }
 
     const timeForAnswer = this._startTime - this.timer.currentTime;
@@ -69,7 +68,7 @@ export default class GameScreen {
   }
 
   updateStateView() {
-    const stateView = new StateView(this.model.state, this.svg);
+    const stateView = new StateView(this.model.state);
     this.root.replaceChild(stateView.element, this.levelState.element);
     this.levelState = stateView;
   }
@@ -91,7 +90,7 @@ export default class GameScreen {
 
   showNextQuestion() {
     this.updateStateView();
-    const nextQuestion = new LevelView(this.model.melodies, this.model.getNextQuestion());
+    const nextQuestion = new LevelView(this.model.getNextQuestion(), this.model.getProgress());
     nextQuestion.onLevelLoaded = this.setStartTimeForAnswer.bind(this);
     nextQuestion.onAnswer = this.processUserAnswer.bind(this);
     this.updateLevelView(nextQuestion);
@@ -99,8 +98,6 @@ export default class GameScreen {
 
   showResultScreen() {
     this.timer.stop();
-    const stats = this.model.getStats();
-    this.model.updateStats();
-    Application.showStats(stats);
+    Application.showStats(this.model.state);
   }
 }

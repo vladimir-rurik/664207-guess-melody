@@ -5,16 +5,6 @@ import GenreAnswerView from './genre-answer';
 import {header} from '../screens/header';
 import Application from "../application";
 
-/** @enum Genres - Ассоциация жанра с его описанием */
-const Genres = {
-  'Rock': `инди-рок`,
-  'Jazz': `джаз`,
-  'Country': `кантри`,
-  'Pop': `поп-музыка`,
-  'Folk': `фолк`,
-  'R&B': `R&B`,
-  'Electronic': `электронная музыка`
-};
 /** @const INPUT_NAME - Имя поля для идентификации */
 const INPUT_NAME = `answer`;
 
@@ -26,23 +16,23 @@ const INPUT_NAME = `answer`;
  */
 export default class LevelScreen extends AbstractView {
   /** @constructor
-   * @param {Object} melodies - Список мелодий с сервера
    * @param {Object} question - Текущий вопрос
+   * @param {string} progress - Показатель прогресса
    */
-  constructor(melodies, question) {
+  constructor(question, progress) {
     super();
-    this.melodies = melodies;
     this.question = question;
+    this.progress = progress;
     this.nowPlaying = null;
   }
 
   get template() {
-    let title = `<h2 class="game__title">Кто исполняет эту песню?</h2>`;
+    let titleClass = `game__title`;
     let formClass = `game__artist`;
     let btn = ``;
 
     if (this.question.type === `genre`) {
-      title = `<h2 class="game__title" align="center">Выберите все треки<br> в жанре ${Genres[this.question.answer]}</h2>`;
+      titleClass = ``;
       formClass = `game__tracks`;
       btn = `<button class="game__submit button" type="submit" disabled>Ответить</button>`;
     }
@@ -53,7 +43,8 @@ export default class LevelScreen extends AbstractView {
         ${header}
         <!--levelState-->
         <div class="main__wrap">
-          ${title}
+          <div class="progress">${this.progress}</div>
+          <h2 class="title ${titleClass}">${this.question.title}</h2>
           <!--PlayerView-->
           <form class="${formClass}">
             <!--Answers-->
@@ -74,7 +65,7 @@ export default class LevelScreen extends AbstractView {
       this.nowPlaying.pause();
       this.nowPlaying.currentTime = 0;
 
-      const btnPlaying = this.nowPlaying.nextSibling.parentElement.parentElement.querySelector(`.track__button`);
+      const btnPlaying = this.nowPlaying.parentNode.querySelector(`.track__button`);
       if (btnPlaying.classList.contains(`track__button--pause`)) {
         btnPlaying.classList.remove(`track__button--pause`);
         btnPlaying.classList.add(`track__button--play`);
@@ -89,22 +80,22 @@ export default class LevelScreen extends AbstractView {
 
     const options = Array.from(this.question.options);
     const answerList = document.createDocumentFragment();
-    for (const id of options) {
+    options.forEach((option, id) => {
       answerList.appendChild(this.question.type === `artist`
-        ? new ArtistAnswerView(this.melodies, id, INPUT_NAME).element
-        : new GenreAnswerView(this.melodies, id, INPUT_NAME).element);
-    }
+        ? new ArtistAnswerView(option, id, INPUT_NAME).element
+        : new GenreAnswerView(option, id, INPUT_NAME).element);
+    });
 
     form.insertBefore(answerList, form.firstChild);
 
     // back to main screen option
     const welcomeBackBtn = this.element.querySelector(`.game__back`);
-    welcomeBackBtn.addEventListener(`click`, () => Application.showWelcome());
+    welcomeBackBtn.addEventListener(`click`, () => Application.start());
 
     const inputs = Array.from(form[INPUT_NAME]);
 
     if (this.question.type === `artist`) {
-      const player = new PlayerView(this.melodies[this.question.answer], `autoplay`).element;
+      const player = new PlayerView(this.question.melody, `autoplay`).element;
       form.insertBefore(player, form.firstChild);
 
       inputs.forEach((input) => input.addEventListener(`change`, (evt) => {
@@ -119,7 +110,6 @@ export default class LevelScreen extends AbstractView {
 
       inputs.forEach((input) => input.addEventListener(`change`, (evt) => {
         evt.preventDefault();
-        // Кнопка отправки отключена, пока не выбран хоть один ответ
         form.querySelector(`.game__submit`).disabled = !inputs.some((answer) => answer.checked);
       }));
 

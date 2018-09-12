@@ -13,6 +13,7 @@ export default class PlayerView extends AbstractView {
     super();
     this.melody = melody;
     this.attrs = attrs;
+    this.canPlay = false;
   }
 
   get template() {
@@ -20,7 +21,9 @@ export default class PlayerView extends AbstractView {
     <div class="track">
       <button class="track__button track__button--play" type="button"></button>
       <div class="track__status">
-        <audio src="${this.melody.src}" ${this.attrs}></audio>
+        <audio ${this.attrs}>
+          <source src="${this.melody}" type="audio/mpeg">
+        </audio>
       </div>
     </div>
     `;
@@ -36,7 +39,7 @@ export default class PlayerView extends AbstractView {
      */
     const playerBtnHolder = (evt) => {
       evt.preventDefault();
-      if (audio.paused) {
+      if (audio.paused && this.canPlay) {
         audio.play();
       } else {
         audio.pause();
@@ -46,6 +49,10 @@ export default class PlayerView extends AbstractView {
         btn.classList.remove(`track__button--pause`);
         btn.classList.add(`track__button--play`);
       }
+    };
+
+    const onCanPlay = () => {
+      this.canPlay = true;
     };
 
     /**
@@ -61,6 +68,7 @@ export default class PlayerView extends AbstractView {
       playerBtn.classList.add(`track__button--play`);
     };
 
+    audio.addEventListener(`canplaythrough`, onCanPlay);
     audio.addEventListener(`playing`, togglePlayerBtnOnPlaying);
     audio.addEventListener(`ended`, togglePlayerBtnOnEnded);
     playerBtn.addEventListener(`click`, playerBtnHolder);
