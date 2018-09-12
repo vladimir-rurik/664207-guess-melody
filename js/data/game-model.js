@@ -1,26 +1,24 @@
-import {INITIAL_STATE, melodies, questions, statistics} from "../data/data";
 import {calcScoring} from "./scoring";
 import {printResults} from "./results";
 
+const INITIAL_STATE = Object.freeze({
+  question: 0,
+  answers: [],
+  points: 0,
+  restAttempts: 3,
+  restTime: 300
+});
+const statistics = [1, 4, 5, 8];
+
 export default class GameModel {
-  constructor() {
+  constructor(questions) {
     this.restart();
     this.statistics = statistics;
-    this.melodies = melodies;
     this.questions = questions;
   }
 
   get state() {
     return this._state;
-  }
-
-  getQuestion(state) {
-    return this.questions[state.question];
-  }
-
-  get rightGenreAnswers() {
-    const question = this.getQuestion(this._state);
-    return Array.from(question.options).filter((i) => this.melodies[i].genre === question.answer);
   }
 
   updateStateProp(prop) {
@@ -47,7 +45,7 @@ export default class GameModel {
   }
 
   getCurrentQuestion() {
-    return this.getQuestion(this._state);
+    return this.questions[this._state.question];
   }
 
   getNextQuestion() {
