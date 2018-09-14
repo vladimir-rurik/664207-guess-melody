@@ -5,6 +5,11 @@ import {showScreen} from "./application";
 const SERVER_URL = `https://es.dump.academy/guess-melody`;
 const APP_ID = 127367003;
 
+export const QuestionType = {
+  ARTIST: `artist`,
+  GENRE: `genre`
+};
+
 const checkResponseStatus = (response) => {
   if (response.ok) {
     return response;
@@ -20,7 +25,7 @@ const toJSON = (response) => response.json();
 const adaptData = (data) => {
   return data.map((question, iq) => {
     let adapted;
-    if (question.type === `artist`) {
+    if (question.type === QuestionType.ARTIST) {
       const options = question.answers.map((it) => {
         return {
           artist: it.title,
@@ -37,7 +42,7 @@ const adaptData = (data) => {
       // TODO: remove
       console.log(`${iq + 1}. Right answer - ${adapted.answer}`);
 
-    } else if (question.type === `genre`) {
+    } else if (question.type === QuestionType.GENRE) {
       const options = question.answers.map((a, i) => {
         return Object.assign({}, a, {id: i});
       });
