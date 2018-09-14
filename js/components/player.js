@@ -17,16 +17,16 @@ export default class PlayerView extends AbstractView {
   }
 
   get template() {
-    return `
-    <div class="track">
-      <button class="track__button track__button--play" type="button"></button>
+    const element = `
       <div class="track__status">
+        <button class="track__button track__button--play" type="button"></button>
         <audio ${this.attrs}>
           <source src="${this.melody}" type="audio/mpeg">
         </audio>
       </div>
-    </div>
     `;
+
+    return element;
   }
 
   bind() {

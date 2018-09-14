@@ -2,8 +2,6 @@ import AbstractView from "../abstract-view";
 import PlayerView from './player';
 import ArtistAnswerView from './artist-answer';
 import GenreAnswerView from './genre-answer';
-import {header} from '../screens/header';
-import Application from "../application";
 
 /** @const INPUT_NAME - Имя поля для идентификации */
 const INPUT_NAME = `answer`;
@@ -38,21 +36,16 @@ export default class LevelScreen extends AbstractView {
     }
 
     return `
-    <section class="game">
-      <section class="main game__screen">
-        ${header}
+      <section class="game__screen">
         <!--levelState-->
-        <div class="main__wrap">
-          <div class="progress">${this.progress}</div>
-          <h2 class="title ${titleClass}">${this.question.title}</h2>
-          <!--PlayerView-->
-          <form class="${formClass}">
-            <!--Answers-->
-            ${btn}
-          </form>
-        </div>
+        <div class="progress">${this.progress}</div>
+        <h2 class="title ${titleClass}">${this.question.title}</h2>
+        <!--PlayerView-->
+        <form class="${formClass}">
+          <!--Answers-->
+          ${btn}
+        </form>
       </section>
-    </section>
     `;
   }
 
@@ -74,7 +67,6 @@ export default class LevelScreen extends AbstractView {
     this.nowPlaying = evt.target;
   }
 
-
   bind() {
     const form = this.element.querySelector(`form`);
 
@@ -88,15 +80,11 @@ export default class LevelScreen extends AbstractView {
 
     form.insertBefore(answerList, form.firstChild);
 
-    // back to main screen option
-    const welcomeBackBtn = this.element.querySelector(`.game__back`);
-    welcomeBackBtn.addEventListener(`click`, () => Application.start());
-
     const inputs = Array.from(form[INPUT_NAME]);
 
     if (this.question.type === `artist`) {
       const player = new PlayerView(this.question.melody, `autoplay`).element;
-      form.insertBefore(player, form.firstChild);
+      form.parentElement.insertBefore(player, form.parentElement.lastElementChild);
 
       inputs.forEach((input) => input.addEventListener(`change`, (evt) => {
         evt.preventDefault();

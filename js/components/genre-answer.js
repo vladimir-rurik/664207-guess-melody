@@ -20,11 +20,13 @@ export default class GenreAnswerView extends AbstractView {
 
   get template() {
     return `
-    <div class="game__answer">
-      <!--PlayerView-->
-      <input class="game__input visually-hidden" type="checkbox" name="${this.inputName}" value="${this.id}" id="answer-${this.id}">
-      <label class="game__check" for="answer-${this.id}">Отметить</label>
-    </div>`;
+    <div class="track">
+      <div class="game__answer">
+        <input class="game__input visually-hidden" type="checkbox" name="${this.inputName}" value="${this.id}" id="answer-${this.id}">
+        <label class="game__check" for="answer-${this.id}">Отметить</label>
+      </div>
+    </div>
+    `;
   }
 
   bind() {

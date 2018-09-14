@@ -16,7 +16,7 @@ export default class GameScreen {
     this.levelView = new LevelView(this.model.getCurrentQuestion(), this.model.getProgress());
 
     this.root = document.createElement(`section`);
-    this.root.classList.add(`main`, `main--level`);
+    this.root.classList.add(`main`, `game`);
     this.root.appendChild(this.levelState.element);
     this.root.appendChild(this.levelView.element);
 
