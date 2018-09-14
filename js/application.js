@@ -6,21 +6,6 @@ import ErrorScreen from "./screens/error-screen";
 import Loader from "./loader";
 import LoadingScreen from "./screens/loading-screen";
 
-/**
- * Рендер экран приложения
- * @param {Node} element - Элемент экрана
- */
-export const showScreen = (element) => {
-  const mainScreen = document.querySelector(`.app .main`);
-  mainScreen.parentNode.replaceChild(element, mainScreen);
-
-  // back to main screen option
-  const welcomeBackBtn = element.querySelector(`.game__back`);
-  if (welcomeBackBtn) {
-    welcomeBackBtn.addEventListener(`click`, () => Application.start());
-  }
-};
-
 let questions = [];
 
 /** Класс для управления экранами игры */
@@ -34,15 +19,30 @@ export default class Application {
     }
   }
 
+  /**
+   * Рендер экран приложения
+   * @param {Node} element - Элемент экрана
+   */
+  static _showScreen(element) {
+    const mainScreen = document.querySelector(`.app .main`);
+    mainScreen.parentNode.replaceChild(element, mainScreen);
+
+    // back to main screen option
+    const welcomeBackBtn = element.querySelector(`.game__back`);
+    if (welcomeBackBtn) {
+      welcomeBackBtn.addEventListener(`click`, () => Application.start());
+    }
+  }
+
   static showWelcome(data) {
     questions = data;
     const welcome = new WelcomeScreen();
-    showScreen(welcome.element);
+    this._showScreen(welcome.element);
   }
 
   static showGame() {
     const gameScreen = new GameScreen(new GameModel(questions));
-    showScreen(gameScreen.element);
+    this._showScreen(gameScreen.element);
     gameScreen.startGame();
   }
 
@@ -59,21 +59,21 @@ export default class Application {
         await Loader.saveStats(result);
         const data = await Loader.loadStats();
         const newStats = GameModel.getStats(state, data);
-        showScreen(new ResultScreen(newStats).element);
+        this._showScreen(new ResultScreen(newStats).element);
       } catch (e) {
         Application.showError(e);
       }
 
     } else {
-      showScreen(new ResultScreen(stats).element);
+      this._showScreen(new ResultScreen(stats).element);
     }
   }
 
   static showLoading() {
-    showScreen(new LoadingScreen().element);
+    this._showScreen(new LoadingScreen().element);
   }
 
   static showError(message) {
-    showScreen(new ErrorScreen(message).element);
+    this._showScreen(new ErrorScreen(message).element);
   }
 }
