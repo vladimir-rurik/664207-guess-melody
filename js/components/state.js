@@ -1,6 +1,7 @@
 
 import AbstractView from "../abstract-view";
 import {INITIAL_STATE} from "../data/results";
+import Application from "../application";
 
 /**
  * Добавление первого нуля перед натуральным однозначным числом
@@ -60,6 +61,10 @@ export default class StateView extends AbstractView {
     };
   }
   bind() {
+    // back to main screen option
+    const welcomeBackBtn = this.element.querySelector(`.game__back`);
+    welcomeBackBtn.addEventListener(`click`, () => Application.start());
+
     const indicator = this.element.querySelector(`.timer__line`);
     const circleRadius = indicator.attributes.r.value;
     const stroke = this.getStroke(circleRadius, this.state.restTime);
