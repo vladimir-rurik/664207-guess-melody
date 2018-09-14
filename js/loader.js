@@ -1,9 +1,12 @@
 /* eslint-disable no-console */
-import LoadingScreen from "./screens/loading-screen";
-import {showScreen} from "./application";
 
 const SERVER_URL = `https://es.dump.academy/guess-melody`;
 const APP_ID = 127367003;
+
+export const QuestionType = {
+  ARTIST: `artist`,
+  GENRE: `genre`
+};
 
 const checkResponseStatus = (response) => {
   if (response.ok) {
@@ -15,12 +18,10 @@ const checkResponseStatus = (response) => {
   }
 };
 
-const toJSON = (response) => response.json();
-
 const adaptData = (data) => {
   return data.map((question, iq) => {
     let adapted;
-    if (question.type === `artist`) {
+    if (question.type === QuestionType.ARTIST) {
       const options = question.answers.map((it) => {
         return {
           artist: it.title,
@@ -37,7 +38,7 @@ const adaptData = (data) => {
       // TODO: remove
       console.log(`${iq + 1}. Right answer - ${adapted.answer}`);
 
-    } else if (question.type === `genre`) {
+    } else if (question.type === QuestionType.GENRE) {
       const options = question.answers.map((a, i) => {
         return Object.assign({}, a, {id: i});
       });
@@ -52,29 +53,26 @@ const adaptData = (data) => {
         return option.genre === adapted.answer;
       }).map((rightAnswer) => rightAnswer.id);
       console.log(`${iq + 1}. Right answer - ${rightAnswers.join()}`);
-
     }
     return adapted;
   });
 };
 
 export default class Loader {
-  static loadData() {
-    const loader = new LoadingScreen().element;
-    return fetch(`${SERVER_URL}/questions`)
-        .then(checkResponseStatus)
-        .then(showScreen(loader))
-        .then(toJSON)
-        .then(adaptData);
+  static async loadData() {
+    const response = await fetch(`${SERVER_URL}/questions`);
+    checkResponseStatus(response);
+    const responseData = await response.json();
+    return adaptData(responseData);
   }
 
-  static loadStats() {
-    return fetch(`${SERVER_URL}/stats/${APP_ID}`)
-        .then(checkResponseStatus)
-        .then(toJSON);
+  static async loadStats() {
+    const response = await fetch(`${SERVER_URL}/stats/${APP_ID}`);
+    checkResponseStatus(response);
+    return await response.json();
   }
 
-  static saveStats(data) {
+  static async saveStats(data) {
     const settings = {
       body: JSON.stringify(data),
       headers: {
@@ -82,6 +80,7 @@ export default class Loader {
       },
       method: `POST`
     };
-    return fetch(`${SERVER_URL}/stats/${APP_ID}`, settings).then(checkResponseStatus);
+    const response = await fetch(`${SERVER_URL}/stats/${APP_ID}`, settings);
+    return checkResponseStatus(response);
   }
 }

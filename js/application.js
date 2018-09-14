@@ -25,10 +25,13 @@ let questions = [];
 
 /** Класс для управления экранами игры */
 export default class Application {
-  static start() {
-    Loader.loadData()
-        .then(Application.showWelcome)
-        .catch(Application.showError);
+  static async start() {
+    try {
+      Application.showLoading();
+      Application.showWelcome(await Loader.loadData());
+    } catch (e) {
+      Application.showError(e);
+    }
   }
 
   static showWelcome(data) {
@@ -43,22 +46,31 @@ export default class Application {
     gameScreen.startGame();
   }
 
-  static showStats(state) {
+  static async showStats(state) {
+    Application.showLoading();
     const stats = GameModel.getStats(state);
     if (stats.isWin) {
-      showScreen(new LoadingScreen().element);
       const result = {
         points: stats.points,
         time: stats.time
       };
-      Loader.saveStats(result)
-          .then(() => Loader.loadStats())
-          .then((data) => GameModel.getStats(state, data))
-          .then((newstats) => showScreen(new ResultScreen(newstats).element))
-          .catch(Application.showError);
+
+      try {
+        await Loader.saveStats(result);
+        const data = await Loader.loadStats();
+        const newStats = GameModel.getStats(state, data);
+        showScreen(new ResultScreen(newStats).element);
+      } catch (e) {
+        Application.showError(e);
+      }
+
     } else {
       showScreen(new ResultScreen(stats).element);
     }
+  }
+
+  static showLoading() {
+    showScreen(new LoadingScreen().element);
   }
 
   static showError(message) {
