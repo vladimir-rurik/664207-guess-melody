@@ -26,12 +26,6 @@ export default class Application {
   static _showScreen(element) {
     const mainScreen = document.querySelector(`.app .main`);
     mainScreen.parentNode.replaceChild(element, mainScreen);
-
-    // back to main screen option
-    const welcomeBackBtn = element.querySelector(`.game__back`);
-    if (welcomeBackBtn) {
-      welcomeBackBtn.addEventListener(`click`, () => Application.start());
-    }
   }
 
   static showWelcome(data) {

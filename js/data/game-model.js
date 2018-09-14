@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {calcScoring} from "./scoring";
 import {printResults} from "./results";
 
@@ -57,7 +56,6 @@ export default class GameModel {
   }
 
   static getStats(state, data) {
-    console.log(data);
     const stats = data ? data.slice(0, data.length - 1) : [];
     return printResults(stats, state);
   }
