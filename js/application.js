@@ -13,6 +13,12 @@ import LoadingScreen from "./screens/loading-screen";
 export const showScreen = (element) => {
   const mainScreen = document.querySelector(`.app .main`);
   mainScreen.parentNode.replaceChild(element, mainScreen);
+
+  // back to main screen option
+  const welcomeBackBtn = element.querySelector(`.game__back`);
+  if (welcomeBackBtn) {
+    welcomeBackBtn.addEventListener(`click`, () => Application.start());
+  }
 };
 
 let questions = [];
