@@ -19,7 +19,7 @@ export default class PlayerView extends AbstractView {
     const element = `
       <div class="track__status">
         <button class="track__button track__button--play" type="button"></button>
-        <audio ${this.attrs}>
+        <audio ${this.attrs} preload="auto">
           <source src="${this.melody}" type="audio/mpeg">
         </audio>
       </div>

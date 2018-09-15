@@ -10,6 +10,11 @@ const minify = require(`gulp-csso`);
 const rename = require(`gulp-rename`);
 const imagemin = require(`gulp-imagemin`);
 const rollup = require(`gulp-better-rollup`);
+const resolve = require(`rollup-plugin-node-resolve`);
+const babel = require(`rollup-plugin-babel`);
+const uglifyjs = require(`uglify-es`);
+const composer = require(`gulp-uglify/composer`);
+const jsminify = composer(uglifyjs, console);
 const sourcemaps = require(`gulp-sourcemaps`);
 const mocha = require(`gulp-mocha`); // Добавим установленный gulp-mocha плагин
 const commonjs = require(`rollup-plugin-commonjs`); // Добавим плагин для работы с `commonjs` модулями
@@ -41,7 +46,20 @@ gulp.task(`scripts`, () => {
   return gulp.src(`js/main.js`)
     .pipe(plumber())
     .pipe(sourcemaps.init())
-    .pipe(rollup({}, `iife`))
+    .pipe(rollup({
+      plugins: [
+        resolve({browser: true}),
+        commonjs(),
+        babel({
+          babelrc: false,
+          exclude: `node_modules/**`,
+          presets: [
+            [`@babel/env`, {modules: false}]
+          ]
+        })
+      ]
+    }, `iife`))
+    .pipe(jsminify())
     .pipe(sourcemaps.write(``))
     .pipe(gulp.dest(`build/js`));
 });

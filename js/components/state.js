@@ -1,4 +1,3 @@
-
 import AbstractView from "../abstract-view";
 import {INITIAL_STATE} from "../data/results";
 import Application from "../application";
