@@ -55,11 +55,6 @@ export default class GameModel {
     return this.getCurrentQuestion();
   }
 
-  static getStats(state, data) {
-    const stats = data ? data.slice(0, data.length - 1) : [];
-    return printResults(stats, state);
-  }
-
   restart() {
     this._answers = [];
     this._state = INITIAL_STATE;
@@ -68,5 +63,10 @@ export default class GameModel {
 
   setRestTime(restTime) {
     this.updateStateProp({restTime});
+  }
+
+  static getStats(state, data) {
+    const stats = data ? data.slice(0, data.length - 1) : [];
+    return printResults(stats, state);
   }
 }
