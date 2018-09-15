@@ -2,6 +2,7 @@ import AbstractView from "../abstract-view";
 import PlayerView from './player';
 import ArtistAnswerView from './artist-answer';
 import GenreAnswerView from './genre-answer';
+import {QuestionType} from "../loader";
 
 /** @const INPUT_NAME - Имя поля для идентификации */
 const INPUT_NAME = `answer`;
@@ -21,7 +22,7 @@ export default class LevelScreen extends AbstractView {
     super();
     this.question = question;
     this.progress = progress;
-    this.nowPlaying = null;
+    this._nowPlaying = null;
   }
 
   get template() {
@@ -29,7 +30,7 @@ export default class LevelScreen extends AbstractView {
     let formClass = `game__artist`;
     let btn = ``;
 
-    if (this.question.type === `genre`) {
+    if (this.question.type === QuestionType.GENRE) {
       titleClass = ``;
       formClass = `game__tracks`;
       btn = `<button class="game__submit button" type="submit" disabled>Ответить</button>`;
@@ -54,17 +55,17 @@ export default class LevelScreen extends AbstractView {
   onLevelLoaded() {}
 
   togglePlayers(evt) {
-    if (this.nowPlaying && this.nowPlaying !== evt.target) {
-      this.nowPlaying.pause();
-      this.nowPlaying.currentTime = 0;
+    if (this._nowPlaying && this._nowPlaying !== evt.target) {
+      this._nowPlaying.pause();
+      this._nowPlaying.currentTime = 0;
 
-      const btnPlaying = this.nowPlaying.parentNode.querySelector(`.track__button`);
+      const btnPlaying = this._nowPlaying.parentNode.querySelector(`.track__button`);
       if (btnPlaying.classList.contains(`track__button--pause`)) {
         btnPlaying.classList.remove(`track__button--pause`);
         btnPlaying.classList.add(`track__button--play`);
       }
     }
-    this.nowPlaying = evt.target;
+    this._nowPlaying = evt.target;
   }
 
   bind() {
@@ -73,7 +74,7 @@ export default class LevelScreen extends AbstractView {
     const options = Array.from(this.question.options);
     const answerList = document.createDocumentFragment();
     options.forEach((option, id) => {
-      answerList.appendChild(this.question.type === `artist`
+      answerList.appendChild(this.question.type === QuestionType.ARTIST
         ? new ArtistAnswerView(option, id, INPUT_NAME).element
         : new GenreAnswerView(option, id, INPUT_NAME).element);
     });
@@ -82,8 +83,10 @@ export default class LevelScreen extends AbstractView {
 
     const inputs = Array.from(form[INPUT_NAME]);
 
-    if (this.question.type === `artist`) {
+    if (this.question.type === QuestionType.ARTIST) {
       const player = new PlayerView(this.question.melody, `autoplay`).element;
+      player.classList.add(`game__track`);
+      player.classList.remove(`track__status`);
       form.parentElement.insertBefore(player, form.parentElement.lastElementChild);
 
       inputs.forEach((input) => input.addEventListener(`change`, (evt) => {
@@ -92,7 +95,7 @@ export default class LevelScreen extends AbstractView {
         this.onAnswer(this.question, answer);
       }));
 
-    } else {
+    } else if (this.question.type === QuestionType.GENRE) {
       const firstPlayer = form.firstChild;
       firstPlayer.querySelector(`audio`).setAttribute(`autoplay`, ``);
 
