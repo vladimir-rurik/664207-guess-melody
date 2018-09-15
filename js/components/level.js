@@ -99,9 +99,10 @@ export default class LevelScreen extends AbstractView {
       const firstPlayer = form.firstChild;
       firstPlayer.querySelector(`audio`).setAttribute(`autoplay`, ``);
 
+      const gameSubmitBtn = form.querySelector(`.game__submit`);
       inputs.forEach((input) => input.addEventListener(`change`, (evt) => {
         evt.preventDefault();
-        form.querySelector(`.game__submit`).disabled = !inputs.some((answer) => answer.checked);
+        gameSubmitBtn.disabled = !inputs.some((answer) => answer.checked);
       }));
 
       // логика переключения играющих мелодий, включается новая, отключается предыдущая
