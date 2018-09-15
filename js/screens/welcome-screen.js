@@ -28,10 +28,6 @@ export default class WelcomeScreen extends AbstractView {
     `;
   }
 
-  get getRulesTemplate() {
-    return GAME_RULES.map((it) => `<li>${it}</li>`).join(``);
-  }
-
   onStartClick() {}
 
   bind() {
@@ -39,5 +35,9 @@ export default class WelcomeScreen extends AbstractView {
       evt.preventDefault();
       Application.showGame();
     });
+  }
+
+  static get getRulesTemplate() {
+    return GAME_RULES.map((it) => `<li>${it}</li>`).join(``);
   }
 }
