@@ -85,6 +85,8 @@ export default class LevelScreen extends AbstractView {
 
     if (this.question.type === QuestionType.ARTIST) {
       const player = new PlayerView(this.question.melody, `autoplay`).element;
+      player.classList.add(`game__track`);
+      player.classList.remove(`track__status`);
       form.parentElement.insertBefore(player, form.parentElement.lastElementChild);
 
       inputs.forEach((input) => input.addEventListener(`change`, (evt) => {
