@@ -11,9 +11,8 @@ const checkResponseStatus = (response) => {
     return response;
   } else if (response.status === 404) {
     throw new Error(`Данные не удалось загрузить,<br> ошибка ${response.status}`);
-  } else {
-    throw new Error(`Произошла ошибка ${response.status} ${response.statusText}`);
   }
+  throw new Error(`Произошла ошибка ${response.status} ${response.statusText}`);
 };
 
 const adaptData = (data) => {
