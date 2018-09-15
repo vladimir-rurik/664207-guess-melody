@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import LoadingScreen from "./screens/loading-screen";
-import {showScreen} from "./application";
-
-=======
->>>>>>> 0a5276547c99035ac1980ca20e40544ce105e09b
 const SERVER_URL = `https://es.dump.academy/guess-melody`;
 const APP_ID = 127367003;
 
@@ -50,10 +44,6 @@ const adaptData = (data) => {
         options,
         answer: question.genre
       };
-<<<<<<< HEAD
-
-=======
->>>>>>> 0a5276547c99035ac1980ca20e40544ce105e09b
     }
     return adapted;
   });

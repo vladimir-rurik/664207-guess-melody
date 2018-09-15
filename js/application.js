@@ -6,18 +6,6 @@ import ErrorScreen from "./screens/error-screen";
 import Loader from "./loader";
 import LoadingScreen from "./screens/loading-screen";
 
-<<<<<<< HEAD
-/**
- * Рендер экран приложения
- * @param {Node} element - Элемент экрана
- */
-export const showScreen = (element) => {
-  const mainScreen = document.querySelector(`.app .main`);
-  mainScreen.parentNode.replaceChild(element, mainScreen);
-};
-
-=======
->>>>>>> 0a5276547c99035ac1980ca20e40544ce105e09b
 let questions = [];
 
 /** Класс для управления экранами игры */
