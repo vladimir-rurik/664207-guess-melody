@@ -31,12 +31,7 @@
     "gulp-sourcemaps": "2.6.4",
     "rollup-plugin-commonjs": "9.1.5",
     "stylelint": "9.4.x",
-    "stylelint-config-htmlacademy": "0.1.x"
-  },
-  "engines": {
-    "node": "8"
-  },
-  "dependencies": {
+    "stylelint-config-htmlacademy": "0.1.x",
     "@babel/core": "^7.0.1",
     "@babel/plugin-external-helpers": "^7.0.0",
     "@babel/polyfill": "^7.0.0",
@@ -47,5 +42,8 @@
     "rollup-plugin-node-resolve": "^3.4.0",
     "uglify-es": "^3.3.9",
     "whatwg-fetch": "^3.0.0"
+  },
+  "engines": {
+    "node": "8"
   }
 }
