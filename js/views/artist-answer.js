@@ -1,5 +1,5 @@
 
-import AbstractView from "../abstract-view";
+import AbstractView from "./abstract-view";
 
 /**
  * Шаблон вариантов ответов по артистам

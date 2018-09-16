@@ -1,5 +1,5 @@
-import AbstractView from "../abstract-view";
-import PlayerView from './player';
+import AbstractView from "./abstract-view";
+import PlayerView from './player-view';
 import ArtistAnswerView from './artist-answer';
 import GenreAnswerView from './genre-answer';
 import {QuestionType} from "../loader";
@@ -13,7 +13,7 @@ const INPUT_NAME = `answer`;
  * 1. выбор артиста по заданной мелодии
  * 2. выбор всех мелодий определённого жанра
  */
-export default class LevelScreen extends AbstractView {
+export default class LevelView extends AbstractView {
   /** @constructor
    * @param {Object} question - Текущий вопрос
    * @param {string} progress - Показатель прогресса

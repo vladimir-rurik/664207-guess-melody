@@ -1,10 +1,10 @@
-import AbstractView from "../abstract-view";
+import AbstractView from "./abstract-view";
 import Application from "../application";
 
 /**
  * Шаблон экрана результата игры
  */
-export default class ResultScreen extends AbstractView {
+export default class ResultView extends AbstractView {
   /** @constructor
    * @param {Object} stats - Результат игрока
    */

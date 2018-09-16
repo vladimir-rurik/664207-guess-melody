@@ -1,4 +1,4 @@
-import AbstractView from "../abstract-view";
+import AbstractView from "./abstract-view";
 import Application from "../application";
 
 const GAME_RULES = [`За 5 минут нужно ответить на все вопросы.`, `Можно допустить 3 ошибки.`];
@@ -6,7 +6,7 @@ const GAME_RULES = [`За 5 минут нужно ответить на все �
 /**
  * Шаблон экрана приветствия
  */
-export default class WelcomeScreen extends AbstractView {
+export default class WelcomeView extends AbstractView {
   constructor() {
     super();
   }

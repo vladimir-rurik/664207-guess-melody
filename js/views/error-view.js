@@ -1,9 +1,9 @@
-import AbstractView from "../abstract-view";
+import AbstractView from "./abstract-view";
 
 /**
  * Шаблон экрана загрузки
  */
-export default class ErrorScreen extends AbstractView {
+export default class ErrorView extends AbstractView {
   constructor(message) {
     super();
     this.message = message;
