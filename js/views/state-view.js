@@ -21,7 +21,29 @@ export default class StateView extends AbstractView {
     this.state = state;
     this._initialTime = INITIAL_STATE.time;
     this.mistakes = INITIAL_STATE.attempts - this.state.restAttempts;
-    this.timeFinished = this.state.restTime >= 30 ? `` : `timer__value--finished`;
+  }
+
+  get timeFinished() {
+    return this.state.restTime >= 30 ? `` : `timer__value--finished`;
+  }
+
+  get templateSvg() {
+    return `
+      <svg xmlns="http://www.w3.org/2000/svg" class="timer" viewBox="0 0 780 780">
+        <circle cx="390" cy="390" r="370" class="timer__line"
+          style="filter: url(#blur); transform: rotate(-90deg) scaleY(-1); transform-origin: center"></circle>
+      </svg>
+    `;
+  }
+
+  get templateTimerValue() {
+    return `
+      <div class="timer__value ${this.timeFinished}" xmlns="http://www.w3.org/1999/xhtml">
+        <span class="timer__mins">${addFirstZero(this.state.restTime / 60)}</span>
+        <span class="timer__dots">:</span>
+        <span class="timer__secs">${addFirstZero(this.state.restTime % 60)}</span>
+      </div>
+    `;
   }
 
   get template() {
@@ -32,22 +54,28 @@ export default class StateView extends AbstractView {
         <img class="game__logo" src="img/melody-logo-ginger.png" alt="Угадай мелодию">
       </a>
 
-      <svg xmlns="http://www.w3.org/2000/svg" class="timer" viewBox="0 0 780 780">
-        <circle cx="390" cy="390" r="370" class="timer__line"
-          style="filter: url(#blur); transform: rotate(-90deg) scaleY(-1); transform-origin: center"></circle>
-      </svg>
-
-      <div class="timer__value ${this.timeFinished}" xmlns="http://www.w3.org/1999/xhtml">
-        <span class="timer__mins">${addFirstZero(this.state.restTime / 60)}</span>
-        <span class="timer__dots">:</span>
-        <span class="timer__secs">${addFirstZero(this.state.restTime % 60)}</span>
-      </div>
+      ${this.templateSvg}
+      ${this.templateTimerValue}
 
       <div class="game__mistakes">
         ${new Array(this.mistakes).fill(`<div class="wrong"></div>`).join(``)}
       </div>
     </header>
     `;
+  }
+
+  get indicator() {
+    if (!this._timerLineElement) {
+      this._timerLineElement = this.element.querySelector(`.timer__line`);
+    }
+    return this._timerLineElement;
+  }
+
+  get timerValue() {
+    if (!this._timerValueElement) {
+      this._timerValueElement = this.element.querySelector(`.timer__value`);
+    }
+    return this._timerValueElement;
   }
 
   getStroke(radius, restTime) {
@@ -59,15 +87,20 @@ export default class StateView extends AbstractView {
       offset: strokeDashOffset
     };
   }
+
+  onTimerRefresh(state) {
+    this.state = state;
+    const circleRadius = this.indicator.attributes.r.value;
+    const stroke = this.getStroke(circleRadius, this.state.restTime);
+    this.indicator.setAttribute(`stroke-dasharray`, `${stroke.array}`);
+    this.indicator.setAttribute(`stroke-dashoffset`, `${stroke.offset}`);
+
+    this.timerValue.innerHTML = this.templateTimerValue;
+  }
+
   bind() {
     // back to main screen option
     const welcomeBackBtn = this.element.querySelector(`.game__back`);
     welcomeBackBtn.addEventListener(`click`, () => Application.start());
-
-    const indicator = this.element.querySelector(`.timer__line`);
-    const circleRadius = indicator.attributes.r.value;
-    const stroke = this.getStroke(circleRadius, this.state.restTime);
-    indicator.setAttribute(`stroke-dasharray`, `${stroke.array}`);
-    indicator.setAttribute(`stroke-dashoffset`, `${stroke.offset}`);
   }
 }

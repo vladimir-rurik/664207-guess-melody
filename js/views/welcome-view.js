@@ -20,7 +20,7 @@ export default class WelcomeView extends AbstractView {
         <h2 class="welcome__rules-title">Правила игры</h2>
         <p class="welcome__text">Правила просты:</p>
         <ul class="welcome__rules-list">
-          ${this.getRulesTemplate}
+          ${WelcomeView.getRulesTemplate}
         </ul>
         <p class="welcome__text">Удачи!</p>
       </div>

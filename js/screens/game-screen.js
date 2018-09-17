@@ -36,7 +36,8 @@ export default class GameScreen {
   }
 
   onTimerTick(time) {
-    this.updateStateTime(time);
+    this.model.setRestTime(time);
+    this.levelState.onTimerRefresh(this.model.state);
   }
 
   onTimerEnd() {
@@ -72,11 +73,6 @@ export default class GameScreen {
     const stateView = new StateView(this.model.state);
     this.root.replaceChild(stateView.element, this.levelState.element);
     this.levelState = stateView;
-  }
-
-  updateStateTime(time) {
-    this.model.setRestTime(time);
-    this.updateStateView();
   }
 
   updateLevelView(view) {
