@@ -14,15 +14,13 @@ export default class PlayerView extends AbstractView {
     super();
     this.melody = melody;
     this.attrs = attrs;
-
-    audioCache.activeAudio = this.melody;
   }
 
   get template() {
     const element = `
       <div class="track__status">
         <button class="track__button track__button--play" type="button"></button>
-        <audio ${this.attrs} preload="auto">
+        <audio ${this.attrs} preload="none">
           <source src="${this.melody}" type="audio/mpeg">
         </audio>
       </div>
@@ -32,6 +30,8 @@ export default class PlayerView extends AbstractView {
   }
 
   bind() {
+    audioCache.activeAudio = this.melody;
+
     const audio = this.element.querySelector(`audio`);
     const playerBtn = this.element.querySelector(`.track__button`);
 
