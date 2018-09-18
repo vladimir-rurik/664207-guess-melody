@@ -1,3 +1,4 @@
+
 import WelcomeView from './views/welcome-view';
 import GameModel from './data/game-model';
 import GameScreen from './screens/game-screen';
@@ -22,11 +23,28 @@ export default class Application {
         audioCache.clear();
       }
       questions = await Loader.loadData();
-      await Loader.loadAudios(questions);
+      const audios = await Loader.loadAudios(questions);
+      if (audios.count !== this.getQuestionAudioCount(questions)) {
+        throw new Error(`Не все аудио файлы загружены. Проверьте соединение с сервером.`);
+      }
       Application.showWelcome();
     } catch (e) {
       Application.showError(e);
     }
+  }
+
+  static getQuestionAudioCount(questionArray) {
+    let srcSet = new Set();
+    questionArray.forEach((question) => {
+      if (question.melody) {
+        srcSet.add(question.melody);
+      } else {
+        question.options.forEach((option) => {
+          srcSet.add(option.src);
+        });
+      }
+    });
+    return srcSet.count;
   }
 
   /**
