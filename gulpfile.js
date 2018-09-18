@@ -43,7 +43,7 @@ gulp.task(`style`, () => {
 });
 
 gulp.task(`scripts`, () => {
-  gulp.src(`js/main.js`)
+  return gulp.src(`js/main.js`)
     .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(rollup({

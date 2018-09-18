@@ -101,6 +101,6 @@ export default class StateView extends AbstractView {
   bind() {
     // back to main screen option
     const welcomeBackBtn = this.element.querySelector(`.game__back`);
-    welcomeBackBtn.addEventListener(`click`, () => Application.start());
+    welcomeBackBtn.addEventListener(`click`, () => Application.showDialog());
   }
 }

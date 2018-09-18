@@ -1,3 +1,6 @@
+import getValuesByKey from './utils/get-values-by-key';
+import audioCache from './data/audio-cache';
+
 const SERVER_URL = `https://es.dump.academy/guess-melody`;
 const APP_ID = 127367003;
 
@@ -54,6 +57,13 @@ export default class Loader {
     checkResponseStatus(response);
     const responseData = await response.json();
     return adaptData(responseData);
+  }
+
+  static loadAudios(gameData) {
+    const sources = getValuesByKey(gameData, `src`);
+    const audioPromises = sources.map((src) => audioCache.createAudio(src));
+
+    return Promise.all(audioPromises);
   }
 
   static async loadStats() {

@@ -1,7 +1,7 @@
 import AbstractView from "./abstract-view";
 
 /**
- * Шаблон экрана загрузки
+ * Шаблон экрана ошибки
  */
 export default class ErrorView extends AbstractView {
   constructor(message) {
@@ -11,8 +11,10 @@ export default class ErrorView extends AbstractView {
 
   get template() {
     return `
-  <section class="main">
-    <div class="title modal__title">${this.message}</div>
-  </section>`;
+      <section class="modal">
+        <h2 class="modal__title">Произошла ошибка!</h2>
+        <p class="modal__text">${this.message}</p>
+      </section>
+    `;
   }
 }

@@ -3,6 +3,7 @@ import PlayerView from './player-view';
 import ArtistAnswerView from './artist-answer';
 import GenreAnswerView from './genre-answer';
 import {QuestionType} from "../loader";
+import Application from "../application";
 
 /** @const INPUT_NAME - Имя поля для идентификации */
 const INPUT_NAME = `answer`;

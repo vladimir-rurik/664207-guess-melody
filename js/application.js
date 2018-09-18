@@ -3,8 +3,13 @@ import GameModel from './data/game-model';
 import GameScreen from './screens/game-screen';
 import ResultView from './views/result-view';
 import ErrorView from "./views/error-view";
+import DialogView from "./views/dialog-view";
 import Loader from "./loader";
 import LoadingView from "./views/loading-view";
+import audioCache from './data/audio-cache';
+
+/** Отладочный триггер */
+export const IS_DEBUG = true;
 
 let questions = [];
 
@@ -13,7 +18,14 @@ export default class Application {
   static async start() {
     try {
       Application.showLoading();
-      Application.showWelcome(await Loader.loadData());
+      if (audioCache) {
+        audioCache.stop();
+        audioCache.removeActive();
+        audioCache.clear();
+      }
+      questions = await Loader.loadData();
+      await Loader.loadAudios(questions);
+      Application.showWelcome();
     } catch (e) {
       Application.showError(e);
     }
@@ -28,8 +40,12 @@ export default class Application {
     mainScreen.parentNode.replaceChild(element, mainScreen);
   }
 
-  static showWelcome(data) {
-    questions = data;
+  static _showDialog(dialogElement) {
+    const mainScreen = document.querySelector(`.app .main`);
+    mainScreen.appendChild(dialogElement);
+  }
+
+  static showWelcome() {
     const welcome = new WelcomeView();
     this._showScreen(welcome.element);
   }
@@ -50,6 +66,9 @@ export default class Application {
       };
 
       try {
+        audioCache.stop();
+        audioCache.removeActive();
+
         await Loader.saveStats(result);
         const data = await Loader.loadStats();
         const newStats = GameModel.getStats(state, data);
@@ -70,4 +89,9 @@ export default class Application {
   static showError(message) {
     this._showScreen(new ErrorView(message).element);
   }
+
+  static showDialog() {
+    this._showDialog(new DialogView().element);
+  }
+
 }

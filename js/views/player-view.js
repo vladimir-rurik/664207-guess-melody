@@ -1,4 +1,5 @@
 
+import audioCache from "../data/audio-cache";
 import AbstractView from "./abstract-view";
 
 /**
@@ -13,6 +14,8 @@ export default class PlayerView extends AbstractView {
     super();
     this.melody = melody;
     this.attrs = attrs;
+
+    audioCache.activeAudio = this.melody;
   }
 
   get template() {
@@ -40,8 +43,10 @@ export default class PlayerView extends AbstractView {
       evt.preventDefault();
       if (audio.paused) {
         audio.play().catch(() => {});
+        audioCache.play();
       } else {
         audio.pause();
+        audioCache.pause();
       }
       const btn = evt.target;
       if (btn.classList.contains(`track__button--pause`)) {
