@@ -1,4 +1,4 @@
-import AbstractView from "../abstract-view";
+import AbstractView from "./abstract-view";
 import Application from "../application";
 
 const GAME_RULES = [`За 5 минут нужно ответить на все вопросы.`, `Можно допустить 3 ошибки.`];
@@ -6,7 +6,7 @@ const GAME_RULES = [`За 5 минут нужно ответить на все �
 /**
  * Шаблон экрана приветствия
  */
-export default class WelcomeScreen extends AbstractView {
+export default class WelcomeView extends AbstractView {
   constructor() {
     super();
   }
@@ -20,16 +20,12 @@ export default class WelcomeScreen extends AbstractView {
         <h2 class="welcome__rules-title">Правила игры</h2>
         <p class="welcome__text">Правила просты:</p>
         <ul class="welcome__rules-list">
-          ${this.getRulesTemplate}
+          ${WelcomeView.getRulesTemplate}
         </ul>
         <p class="welcome__text">Удачи!</p>
       </div>
     </section>
     `;
-  }
-
-  get getRulesTemplate() {
-    return GAME_RULES.map((it) => `<li>${it}</li>`).join(``);
   }
 
   onStartClick() {}
@@ -39,5 +35,9 @@ export default class WelcomeScreen extends AbstractView {
       evt.preventDefault();
       Application.showGame();
     });
+  }
+
+  static get getRulesTemplate() {
+    return GAME_RULES.map((it) => `<li>${it}</li>`).join(``);
   }
 }

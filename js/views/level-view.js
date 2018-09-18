@@ -1,8 +1,9 @@
-import AbstractView from "../abstract-view";
-import PlayerView from './player';
+import AbstractView from "./abstract-view";
+import PlayerView from './player-view';
 import ArtistAnswerView from './artist-answer';
 import GenreAnswerView from './genre-answer';
 import {QuestionType} from "../loader";
+import Application from "../application";
 
 /** @const INPUT_NAME - Имя поля для идентификации */
 const INPUT_NAME = `answer`;
@@ -13,7 +14,7 @@ const INPUT_NAME = `answer`;
  * 1. выбор артиста по заданной мелодии
  * 2. выбор всех мелодий определённого жанра
  */
-export default class LevelScreen extends AbstractView {
+export default class LevelView extends AbstractView {
   /** @constructor
    * @param {Object} question - Текущий вопрос
    * @param {string} progress - Показатель прогресса
@@ -99,9 +100,10 @@ export default class LevelScreen extends AbstractView {
       const firstPlayer = form.firstChild;
       firstPlayer.querySelector(`audio`).setAttribute(`autoplay`, ``);
 
+      const gameSubmitBtn = form.querySelector(`.game__submit`);
       inputs.forEach((input) => input.addEventListener(`change`, (evt) => {
         evt.preventDefault();
-        form.querySelector(`.game__submit`).disabled = !inputs.some((answer) => answer.checked);
+        gameSubmitBtn.disabled = !inputs.some((answer) => answer.checked);
       }));
 
       // логика переключения играющих мелодий, включается новая, отключается предыдущая
@@ -112,6 +114,21 @@ export default class LevelScreen extends AbstractView {
         const answer = inputs.filter((i) => i.checked).map((i) => Number(i.value));
         this.onAnswer(this.question, answer);
       });
+    }
+
+    if (Application.isDebugModeEnabled) {
+      if (this.question.type === QuestionType.ARTIST) {
+        const answerElement = this.element.querySelector(`#answer-${this.question.answer}`);
+        answerElement.parentElement.style.border = `1px solid red`;
+      } else if (this.question.type === QuestionType.GENRE) {
+        const rightAnswers = Array.from(this.question.options).filter((option) => {
+          return option.genre === this.question.answer;
+        }).map((rightAnswer) => rightAnswer.id);
+        rightAnswers.forEach((answer) => {
+          const answerElement = this.element.querySelector(`#answer-${answer}`);
+          answerElement.parentElement.style.border = `1px solid red`;
+        });
+      }
     }
 
     this.onLevelLoaded();

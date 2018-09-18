@@ -1,5 +1,6 @@
 
-import AbstractView from "../abstract-view";
+import audioCache from "../data/audio-cache";
+import AbstractView from "./abstract-view";
 
 /**
  * Шаблон музыкального плеера
@@ -19,7 +20,7 @@ export default class PlayerView extends AbstractView {
     const element = `
       <div class="track__status">
         <button class="track__button track__button--play" type="button"></button>
-        <audio ${this.attrs} preload="auto">
+        <audio ${this.attrs} preload="none">
           <source src="${this.melody}" type="audio/mpeg">
         </audio>
       </div>
@@ -29,6 +30,8 @@ export default class PlayerView extends AbstractView {
   }
 
   bind() {
+    audioCache.activeAudio = this.melody;
+
     const audio = this.element.querySelector(`audio`);
     const playerBtn = this.element.querySelector(`.track__button`);
 
@@ -40,8 +43,10 @@ export default class PlayerView extends AbstractView {
       evt.preventDefault();
       if (audio.paused) {
         audio.play().catch(() => {});
+        audioCache.play();
       } else {
         audio.pause();
+        audioCache.pause();
       }
       const btn = evt.target;
       if (btn.classList.contains(`track__button--pause`)) {

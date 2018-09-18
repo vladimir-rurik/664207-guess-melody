@@ -1,10 +1,10 @@
 
-import AbstractView from "../abstract-view";
+import AbstractView from "./abstract-view";
 
 /**
  * Шаблон экрана загрузки
  */
-export default class LoadingScreen extends AbstractView {
+export default class LoadingView extends AbstractView {
   constructor() {
     super();
   }

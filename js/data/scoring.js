@@ -3,6 +3,9 @@ export const MAX_NUM_OF_ATTEMPTS = 3;
 // Максимальное время на быстрый ответ
 const MAX_FAST_ANSWER_TIME = 30;
 
+const ONE_SCORE = 1;
+const TWO_SCORES = 2;
+
 /*
  * Подсчёт набранных баллов игрока
  * @param {Array} answers - Массив ответов пользователя
@@ -25,8 +28,8 @@ export const calcScoring = (answers, restAttempts) => {
 
   return answers.reduce((acc, current) => {
     if (current.success) {
-      return current.time < MAX_FAST_ANSWER_TIME ? acc + 2 : acc + 1;
+      return current.time < MAX_FAST_ANSWER_TIME ? acc + TWO_SCORES : acc + ONE_SCORE;
     }
-    return acc - 2;
+    return acc - TWO_SCORES;
   }, 0);
 };

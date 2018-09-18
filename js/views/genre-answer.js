@@ -1,6 +1,6 @@
 
-import AbstractView from "../abstract-view";
-import PlayerView from './player';
+import AbstractView from "./abstract-view";
+import PlayerView from './player-view';
 
 /**
  * Шаблон вариантов мелодий по жанру

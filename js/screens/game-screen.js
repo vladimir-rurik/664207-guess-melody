@@ -1,5 +1,5 @@
-import StateView from '../components/state';
-import LevelView from '../components/level';
+import StateView from '../views/state-view';
+import LevelView from '../views/level-view';
 import Application from '../application';
 import Timer from '../data/timer';
 import {QuestionType} from "../loader";
@@ -36,11 +36,12 @@ export default class GameScreen {
   }
 
   onTimerTick(time) {
-    this.updateStateTime(time);
+    this.model.setRestTime(time);
+    this.levelState.onTimerRefresh(this.model.state);
   }
 
   onTimerEnd() {
-    this.showResultScreen();
+    this.showResultView();
   }
 
   setStartTimeForAnswer() {
@@ -64,7 +65,7 @@ export default class GameScreen {
     if (this.model.hasNextQuestion()) {
       this.showNextQuestion();
     } else {
-      this.showResultScreen();
+      this.showResultView();
     }
   }
 
@@ -72,11 +73,6 @@ export default class GameScreen {
     const stateView = new StateView(this.model.state);
     this.root.replaceChild(stateView.element, this.levelState.element);
     this.levelState = stateView;
-  }
-
-  updateStateTime(time) {
-    this.model.setRestTime(time);
-    this.updateStateView();
   }
 
   updateLevelView(view) {
@@ -97,7 +93,7 @@ export default class GameScreen {
     this.updateLevelView(nextQuestion);
   }
 
-  showResultScreen() {
+  showResultView() {
     this.timer.stop();
     Application.showStats(this.model.state);
   }
