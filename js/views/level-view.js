@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import AbstractView from "./abstract-view";
 import PlayerView from './player-view';
 import ArtistAnswerView from './artist-answer';
