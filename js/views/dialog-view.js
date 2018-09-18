@@ -1,12 +1,13 @@
 import AbstractView from "./abstract-view";
-import Application from "../application";
 
 /**
  * Шаблон экрана подтверждения
  */
 export default class DialogView extends AbstractView {
-  constructor() {
+  constructor(application) {
     super();
+    this.application = application;
+    this.isDebugMode = application.isDebugMode;
   }
 
   get template() {
@@ -25,7 +26,7 @@ export default class DialogView extends AbstractView {
 
   bind() {
     const okBtn = this.element.querySelector(`.button--ok`);
-    okBtn.addEventListener(`click`, () => Application.start());
+    okBtn.addEventListener(`click`, () => this.application.start(this.isDebugMode));
 
     const closeBtn = this.element.querySelector(`.modal__close`);
     closeBtn.addEventListener(`click`, () => this.element.parentNode.removeChild(this.element));

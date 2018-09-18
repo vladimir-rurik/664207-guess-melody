@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import AbstractView from "./abstract-view";
 import PlayerView from './player-view';
 import ArtistAnswerView from './artist-answer';
@@ -114,6 +115,21 @@ export default class LevelView extends AbstractView {
         const answer = inputs.filter((i) => i.checked).map((i) => Number(i.value));
         this.onAnswer(this.question, answer);
       });
+    }
+
+    if (Application.isDebugModeEnabled) {
+      if (this.question.type === QuestionType.ARTIST) {
+        const answerElement = this.element.querySelector(`#answer-${this.question.answer}`);
+        answerElement.parentElement.style.border = `1px solid red`;
+      } else if (this.question.type === QuestionType.GENRE) {
+        const rightAnswers = Array.from(this.question.options).filter((option) => {
+          return option.genre === this.question.answer;
+        }).map((rightAnswer) => rightAnswer.id);
+        rightAnswers.forEach((answer) => {
+          const answerElement = this.element.querySelector(`#answer-${answer}`);
+          answerElement.parentElement.style.border = `1px solid red`;
+        });
+      }
     }
 
     this.onLevelLoaded();

@@ -8,15 +8,13 @@ import Loader from "./loader";
 import LoadingView from "./views/loading-view";
 import audioCache from './data/audio-cache';
 
-/** Отладочный триггер */
-export const IS_DEBUG = true;
-
 let questions = [];
 
 /** Класс для управления экранами игры */
 export default class Application {
-  static async start() {
+  static async start(isDebugMode) {
     try {
+      this.isDebugMode = isDebugMode;
       Application.showLoading();
       if (audioCache) {
         audioCache.stop();
@@ -91,7 +89,11 @@ export default class Application {
   }
 
   static showDialog() {
-    this._showDialog(new DialogView().element);
+    this._showDialog(new DialogView(Application).element);
+  }
+
+  static get isDebugModeEnabled() {
+    return this.isDebugMode;
   }
 
 }
