@@ -15,7 +15,8 @@ export default class GenreAnswerView extends AbstractView {
     super();
     this.id = id;
     this.inputName = inputName;
-    this.player = new PlayerView(melody.src).element;
+    this.isPlayMode = id === 0 ? true : false;
+    this.player = new PlayerView(melody.src, this.isPlayMode).element;
   }
 
   get template() {

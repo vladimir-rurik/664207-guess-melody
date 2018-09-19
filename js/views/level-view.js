@@ -85,7 +85,7 @@ export default class LevelView extends AbstractView {
     const inputs = Array.from(form[INPUT_NAME]);
 
     if (this.question.type === QuestionType.ARTIST) {
-      const player = new PlayerView(this.question.melody, `autoplay`).element;
+      const player = new PlayerView(this.question.melody, true).element;
       player.classList.add(`game__track`);
       player.classList.remove(`track__status`);
       form.parentElement.insertBefore(player, form.parentElement.lastElementChild);
@@ -97,9 +97,6 @@ export default class LevelView extends AbstractView {
       }));
 
     } else if (this.question.type === QuestionType.GENRE) {
-      const firstPlayer = form.firstChild;
-      firstPlayer.querySelector(`audio`).setAttribute(`autoplay`, ``);
-
       const gameSubmitBtn = form.querySelector(`.game__submit`);
       inputs.forEach((input) => input.addEventListener(`change`, (evt) => {
         evt.preventDefault();
