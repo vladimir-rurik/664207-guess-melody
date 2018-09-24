@@ -41,7 +41,11 @@
     "rollup-plugin-babel": "4.0.3",
     "rollup-plugin-node-resolve": "3.4.0",
     "uglify-es": "3.3.9",
-    "whatwg-fetch": "3.0.0"
+    "whatwg-fetch": "3.0.0",
+    "typescript": "3.0.3",
+    "browserify": "16.2.2",
+    "tsify": "4.0.0",
+    "vinyl-source-stream": "2.0.0"
   },
   "engines": {
     "node": "8"

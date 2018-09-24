@@ -13,9 +13,13 @@ let questions = [];
 
 /** Класс для управления экранами игры */
 export default class Application {
+
+  private static _isDebugMode : boolean;
+  private static _audios : Array<object>;
+
   static async start(isDebugMode) {
     try {
-      this.isDebugMode = isDebugMode;
+      this._isDebugMode = isDebugMode;
       Application.showLoading();
       if (audioCache) {
         audioCache.stop();
@@ -23,8 +27,8 @@ export default class Application {
         audioCache.clear();
       }
       questions = await Loader.loadData();
-      const audios = await Loader.loadAudios(questions);
-      if (audios.count !== this.getQuestionAudioCount(questions)) {
+      this._audios = await Loader.loadAudios(questions);
+      if (this._audios.length !== this.getQuestionAudioCount(questions)) {
         throw new Error(`Не все аудио файлы загружены. Проверьте соединение с сервером.`);
       }
       Application.showWelcome();
@@ -44,7 +48,7 @@ export default class Application {
         });
       }
     });
-    return srcSet.count;
+    return srcSet.size;
   }
 
   /**
@@ -53,12 +57,16 @@ export default class Application {
    */
   static _showScreen(element) {
     const mainScreen = document.querySelector(`.app .main`);
-    mainScreen.parentNode.replaceChild(element, mainScreen);
+    if (mainScreen !== null && mainScreen.parentNode !== null) {
+      mainScreen.parentNode.replaceChild(element, mainScreen);
+    }
   }
 
   static _showDialog(dialogElement) {
     const mainScreen = document.querySelector(`.app .main`);
-    mainScreen.appendChild(dialogElement);
+    if (mainScreen != null) {
+      mainScreen.appendChild(dialogElement);
+    }
   }
 
   static showWelcome() {
@@ -74,7 +82,7 @@ export default class Application {
 
   static async showStats(state) {
     Application.showLoading();
-    const stats = GameModel.getStats(state);
+    const stats = GameModel.getStats(state, null);
     if (stats.isWin) {
       const result = {
         points: stats.points,
@@ -111,7 +119,7 @@ export default class Application {
   }
 
   static get isDebugModeEnabled() {
-    return this.isDebugMode;
+    return this._isDebugMode;
   }
 
 }

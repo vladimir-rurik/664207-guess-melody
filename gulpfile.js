@@ -18,6 +18,9 @@ const jsminify = composer(uglifyjs, console);
 const sourcemaps = require(`gulp-sourcemaps`);
 const mocha = require(`gulp-mocha`); // Добавим установленный gulp-mocha плагин
 const commonjs = require(`rollup-plugin-commonjs`); // Добавим плагин для работы с `commonjs` модулями
+const browserify = require(`browserify`);
+const source = require(`vinyl-source-stream`);
+const tsify = require(`tsify`);
 
 gulp.task(`style`, () => {
   return gulp.src(`sass/style.scss`).
@@ -43,7 +46,16 @@ gulp.task(`style`, () => {
 });
 
 gulp.task(`scripts`, () => {
-  return gulp.src(`js/main.js`)
+  return browserify({
+    basedir: `.`,
+    debug: true,
+    entries: [`js/main.ts`],
+    cache: {},
+    packageCache: {}
+  })
+    .plugin(tsify)
+    .bundle()
+    .pipe(source(`main.js`))
     .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(rollup({

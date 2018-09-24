@@ -16,11 +16,15 @@ const addFirstZero = (num) => (`0${Math.floor(num)}`).slice(-2);
  * @return {Node}
  */
 export default class StateView extends AbstractView {
+
+  private _state : object;
+  private _initialTime : number;
+
   constructor(state) {
     super();
-    this.state = state;
+    this._state = state;
     this._initialTime = INITIAL_STATE.time;
-    this.mistakes = INITIAL_STATE.attempts - this.state.restAttempts;
+    this.mistakes = INITIAL_STATE.attempts - this._state.restAttempts;
   }
 
   get timeFinished() {
